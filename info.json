@@ -1,0 +1,13 @@
+{
+	"author": ["SnappyDragon"],
+	"install_msg": "Thank you for adding the Zen Garden repository!",
+	"name": "Automated r/PvZH Garden",
+	"short": "A repository containing the PvZ-themed Zen Garden game cog.",
+	"description": "This repository contains the Zen Garden cog, an interactive Plants vs. Zombies game based on the PvZ Fusion mod. Users can plant, grow, sell, and fuse hundreds of custom plants in a feature-rich economy system. This cog was originally made for the r/PvZHeroes Discord server.",
+	"tags": [
+    	"games",
+    	"economy",
+    	"pvz",
+    	"fun"
+  	]
+}

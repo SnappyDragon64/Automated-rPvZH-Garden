@@ -1,0 +1,8 @@
+{
+  "fertilizer": {
+    "name": "Fertilizer",
+    "cost": 2000,
+    "stock": 8,
+    "type": "material"
+  }
+}

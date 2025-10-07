@@ -1,0 +1,254 @@
+[
+    {
+        "id": "Peashooter",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Sunflower",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Cherry Bomb",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Wall-nut",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Potato Mine",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Chomper",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Puff-shroom",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Fume-shroom",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Hypno-shroom",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Scaredy-shroom",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Ice-shroom",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Doom-shroom",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Lily Pad",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Squash",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Threepeater",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Tangle Kelp",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Jalapeno",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Spikeweed",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Torchwood",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Sea-shroom",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Plantern",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Cactus",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Blover",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Starfruit",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Pumpkin",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Magnet-shroom",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Cabbage-pult",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Kernel-pult",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Garlic",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Umbrella Leaf",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Marigold",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Melon-pult",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Flower Pot",
+        "type": "base_plant",
+        "shop": true,
+        "category": "vanilla"
+    },
+    {
+        "id": "Golden Bean",
+        "type": "base_plant",
+        "shop": true,
+        "category": "shop"
+    },
+    {
+        "id": "Jicamagicker",
+        "type": "base_plant",
+        "shop": true,
+        "category": "shop"
+    },
+    {
+        "id": "Imitater",
+        "type": "base_plant",
+        "shop": true,
+        "category": "mystery"
+    },
+    {
+        "id": "Firnace",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Spruce Sharpshooter",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Saw-me-not",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Snow Lotus",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Aqua Aloe",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Bamblock",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    }
+]

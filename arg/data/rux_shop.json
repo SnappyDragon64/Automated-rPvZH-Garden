@@ -1,0 +1,112 @@
+{
+  "plot_7": {
+    "name": "+1 Plot",
+    "cost": 10000,
+    "category": "upgrade",
+    "requirements": [],
+    "description": "Water you plottin'?"
+  },
+  "plot_8": {
+    "name": "+1 Plot",
+    "cost": 25000,
+    "category": "upgrade",
+    "requirements": [
+      "plot_7"
+    ],
+    "description": "Water you plottin'?"
+  },
+  "plot_9": {
+    "name": "+1 Plot",
+    "cost": 50000,
+    "category": "upgrade",
+    "requirements": [
+      "plot_8"
+    ],
+    "description": "Water you plottin'?"
+  },
+  "plot_10": {
+    "name": "+1 Plot",
+    "cost": 50000,
+    "category": "upgrade",
+    "requirements": [
+      "plot_9"
+    ],
+    "description": "Water you plottin'?"
+  },
+  "plot_11": {
+    "name": "+1 Plot",
+    "cost": 100000,
+    "category": "upgrade",
+    "requirements": [
+      "plot_10"
+    ],
+    "description": "Water you plottin'?"
+  },
+  "plot_12": {
+    "name": "+1 Plot",
+    "cost": 100000,
+    "category": "upgrade",
+    "requirements": [
+      "plot_11"
+    ],
+    "description": "Water you plottin'?"
+  },
+  "storage_shed": {
+    "name": "Storage Shed",
+    "cost": 250000,
+    "category": "upgrade",
+    "requirements": [
+      "plot_12"
+    ],
+    "description": "Storage for your plants."
+  },
+  "shed_upgrade": {
+    "name": "Storage Shed Upgrade",
+    "cost": 500000,
+    "category": "upgrade",
+    "requirements": [
+      "storage_shed"
+    ],
+    "description": "Double the storage for your plants."
+  },
+  "pin": {
+    "name": "#off-topic message pin",
+    "cost": 500000,
+    "category": "limited",
+    "stock": 2,
+    "requirements": [],
+    "description": "You know what they say, once you pin a message, it won't move until the next off topic deletion."
+  },
+  "name_change": {
+    "name": "#off-topic name change",
+    "cost": 500000,
+    "category": "limited",
+    "stock": 1,
+    "requirements": [],
+    "description": "You could be the talk of the town, the belle of the ball, the star of the show, the cr\u00e9me de la cr\u00e9me, the type of topic everyone is on. Even though you shop at hot topic..."
+  },
+  "event_role": {
+    "name": "Biodome Botanist Role",
+    "cost": 1000000,
+    "category": "limited",
+    "stock": 4,
+    "requirements": [],
+    "description": "Fusing Plants in Space? Some of their fellow users think they're crazy, but someboty appreciate the effort."
+  },
+  "nitro": {
+    "name": "Discord Nitro",
+    "cost": 1000000,
+    "category": "limited",
+    "stock": 1,
+    "requirements": [],
+    "description": "This nitro was sponsored by Penny. She has money, girl."
+  },
+  "big_shot_role": {
+    "name": "[[BIG 5HOT]] Role",
+    "cost": 5555555,
+    "category": "limited",
+    "stock": 1,
+    "requirements": [],
+    "description": "WELL HAVE I GOT A [[Specil Deal]] FOR LONELY [[Hearts]] LIKE YOU!!"
+  }
+}

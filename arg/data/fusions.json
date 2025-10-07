@@ -1,0 +1,3698 @@
+[
+  {
+    "id": "Giant Wall-nut",
+    "recipe": [
+      "Wall-nut",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Tall-nut",
+    "recipe": [
+      "Wall-nut",
+      "Fertilizer"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Gloom-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Fertilizer"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Spikerock",
+    "recipe": [
+      "Spikeweed",
+      "Fertilizer"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cattail",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cob Cannon",
+    "recipe": [
+      "Kernel-pult",
+      "Kernel-pult",
+      "Fertilizer"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Repeater",
+    "recipe": [
+      "Peashooter",
+      "Peashooter"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sunshooter",
+    "recipe": [
+      "Peashooter",
+      "Sunflower"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Twin Sunflower",
+    "recipe": [
+      "Sunflower",
+      "Sunflower"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cherry-shooter",
+    "recipe": [
+      "Cherry Bomb",
+      "Peashooter"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sun Bomb",
+    "recipe": [
+      "Sunflower",
+      "Cherry Bomb"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Peanut",
+    "recipe": [
+      "Peashooter",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sun-nut",
+    "recipe": [
+      "Sunflower",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cherry-nut",
+    "recipe": [
+      "Cherry Bomb",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Potato-shooter",
+    "recipe": [
+      "Peashooter",
+      "Potato Mine"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sun Mine",
+    "recipe": [
+      "Sunflower",
+      "Potato Mine"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cherry Mine",
+    "recipe": [
+      "Cherry Bomb",
+      "Potato Mine"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Mine-nut",
+    "recipe": [
+      "Potato Mine",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chomp-shooter",
+    "recipe": [
+      "Chomper",
+      "Peashooter"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sun Chomper",
+    "recipe": [
+      "Sunflower",
+      "Chomper"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cherry Chomper",
+    "recipe": [
+      "Cherry Bomb",
+      "Chomper"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chomp-nut",
+    "recipe": [
+      "Chomper",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chomp-mine",
+    "recipe": [
+      "Chomper",
+      "Potato Mine"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Pea-shroom",
+    "recipe": [
+      "Peashooter",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sun-shroom",
+    "recipe": [
+      "Sunflower",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Mini Nut-shroom",
+    "recipe": [
+      "Wall-nut",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Mine-shroom",
+    "recipe": [
+      "Potato Mine",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Hypno-nut",
+    "recipe": [
+      "Hypno-shroom",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Mini Hypno-shroom",
+    "recipe": [
+      "Hypno-shroom",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Perfume-shroom",
+    "recipe": [
+      "Hypno-shroom",
+      "Fume-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Hypno-mine",
+    "recipe": [
+      "Hypno-shroom",
+      "Potato Mine"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chippy-shroom",
+    "recipe": [
+      "Potato Mine",
+      "Scaredy-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Plucky-shroom",
+    "recipe": [
+      "Scaredy-shroom",
+      "Fume-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Trippy-shroom",
+    "recipe": [
+      "Scaredy-shroom",
+      "Hypno-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Snow Pea",
+    "recipe": [
+      "Peashooter",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chilly Bomb",
+    "recipe": [
+      "Cherry Bomb",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Ice-nut",
+    "recipe": [
+      "Wall-nut",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Mini Ice-shroom",
+    "recipe": [
+      "Ice-shroom",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Frost-shroom",
+    "recipe": [
+      "Ice-shroom",
+      "Fume-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cryonic-shroom",
+    "recipe": [
+      "Hypno-shroom",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Shivery-shroom",
+    "recipe": [
+      "Scaredy-shroom",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Doom Pea",
+    "recipe": [
+      "Doom-shroom",
+      "Peashooter"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Doom Chomper",
+    "recipe": [
+      "Doom-shroom",
+      "Chomper"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Mini Doom-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Fallout-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Fume-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Curse-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Hypno-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Frenzy-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Scaredy-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Doom-nut",
+    "recipe": [
+      "Doom-shroom",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Apocaly-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sunflower Pad",
+    "recipe": [
+      "Sunflower",
+      "Lily Pad"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Squash Pad",
+    "recipe": [
+      "Squash",
+      "Lily Pad"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Ice Squash",
+    "recipe": [
+      "Squash",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Hypno Squash",
+    "recipe": [
+      "Squash",
+      "Hypno-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Tripad",
+    "recipe": [
+      "Threepeater",
+      "Lily Pad"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Squash-spreader",
+    "recipe": [
+      "Threepeater",
+      "Squash"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Tangle Mine",
+    "recipe": [
+      "Potato Mine",
+      "Tangle Kelp"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Kelp Mine",
+    "recipe": [
+      "Potato Mine",
+      "Tangle Kelp",
+      "Tangle Kelp"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Mangle Kelp",
+    "recipe": [
+      "Squash",
+      "Tangle Kelp"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Kelp-spreader",
+    "recipe": [
+      "Threepeater",
+      "Tangle Kelp"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Threepea Mine",
+    "recipe": [
+      "Threepeater",
+      "Potato Mine"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bambomb",
+    "recipe": [
+      "Jalapeno",
+      "Cherry Bomb"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Jalapeno Mine",
+    "recipe": [
+      "Jalapeno",
+      "Potato Mine"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Jala-nut",
+    "recipe": [
+      "Jalapeno",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Flame-shroom",
+    "recipe": [
+      "Jalapeno",
+      "Fume-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Unstable Obsidian",
+    "recipe": [
+      "Jalapeno",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chilli Pad",
+    "recipe": [
+      "Lily Pad",
+      "Jalapeno"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chilli Squash",
+    "recipe": [
+      "Jalapeno",
+      "Squash"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Scorched Threepeater",
+    "recipe": [
+      "Jalapeno",
+      "Threepeater"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chilli Kelp",
+    "recipe": [
+      "Jalapeno",
+      "Tangle Kelp"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Spike-nut",
+    "recipe": [
+      "Spikeweed",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Iceweed",
+    "recipe": [
+      "Spikeweed",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Squashweed",
+    "recipe": [
+      "Spikeweed",
+      "Squash"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Spike-kelp",
+    "recipe": [
+      "Spikeweed",
+      "Tangle Kelp"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Tangle Weed",
+    "recipe": [
+      "Spikeweed",
+      "Tangle Kelp",
+      "Spikeweed"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Spike-spreader",
+    "recipe": [
+      "Spikeweed",
+      "Threepeater"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Scorchweed",
+    "recipe": [
+      "Spikeweed",
+      "Jalapeno"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cherrywood",
+    "recipe": [
+      "Torchwood",
+      "Cherry Bomb"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Icewood",
+    "recipe": [
+      "Torchwood",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Doomwood",
+    "recipe": [
+      "Torchwood",
+      "Doom-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Torchpad",
+    "recipe": [
+      "Torchwood",
+      "Lily Pad"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Squorchwood",
+    "recipe": [
+      "Torchwood",
+      "Squash"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Torchthree",
+    "recipe": [
+      "Torchwood",
+      "Threepeater"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Torch-kelp",
+    "recipe": [
+      "Torchwood",
+      "Tangle Kelp"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Scorchwood",
+    "recipe": [
+      "Torchwood",
+      "Jalapeno"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Torchweed",
+    "recipe": [
+      "Torchwood",
+      "Spikeweed"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sea Sun-shroom",
+    "recipe": [
+      "Sunflower",
+      "Sea-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sea-lamp",
+    "recipe": [
+      "Plantern",
+      "Sea-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Doom Cactus",
+    "recipe": [
+      "Cactus",
+      "Doom-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sea-thorn",
+    "recipe": [
+      "Sea-shroom",
+      "Cactus"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Lumina Cactus",
+    "recipe": [
+      "Cactus",
+      "Plantern"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Pea Drone",
+    "recipe": [
+      "Blover",
+      "Peashooter"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Hypno-blover",
+    "recipe": [
+      "Blover",
+      "Hypno-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sea-blover",
+    "recipe": [
+      "Sea-shroom",
+      "Blover"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Glover",
+    "recipe": [
+      "Plantern",
+      "Blover"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Angler Chomper",
+    "recipe": [
+      "Plantern",
+      "Chomper"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cactus Drone",
+    "recipe": [
+      "Cactus",
+      "Blover"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Twinkle-shroom",
+    "recipe": [
+      "Puff-shroom",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Starry-shroom",
+    "recipe": [
+      "Scaredy-shroom",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Spicy Starfruit",
+    "recipe": [
+      "Jalapeno",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sparkwood",
+    "recipe": [
+      "Torchwood",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sea Star",
+    "recipe": [
+      "Sea-shroom",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Lumina Star",
+    "recipe": [
+      "Plantern",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Thorn Star",
+    "recipe": [
+      "Cactus",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cyclover",
+    "recipe": [
+      "Blover",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cherry Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Cherry Bomb"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Potato Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Potato Mine"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bewitching Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Hypno-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bold Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Scaredy-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Squash Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Squash"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Jack-o-Lantern",
+    "recipe": [
+      "Pumpkin",
+      "Plantern"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Thorn Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Cactus"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Wind Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Blover"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Star Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Magnet-flower",
+    "recipe": [
+      "Sunflower",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cherry-magnet",
+    "recipe": [
+      "Cherry Bomb",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Foil-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Hypno-magnet",
+    "recipe": [
+      "Hypno-shroom",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Doom Lure",
+    "recipe": [
+      "Doom-shroom",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sea Magnet-shroom",
+    "recipe": [
+      "Sea-shroom",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Lumina Magnet",
+    "recipe": [
+      "Plantern",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Magneto-cactus",
+    "recipe": [
+      "Cactus",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Magneto-blover",
+    "recipe": [
+      "Blover",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Magnetar",
+    "recipe": [
+      "Starfruit",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Magneto-pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sun Cabbage",
+    "recipe": [
+      "Sunflower",
+      "Cabbage-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sunflower Pot",
+    "recipe": [
+      "Sunflower",
+      "Flower Pot"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Luminous Pot",
+    "recipe": [
+      "Plantern",
+      "Flower Pot"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cabbage Pot",
+    "recipe": [
+      "Cabbage-pult",
+      "Flower Pot"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Popcorn-pult",
+    "recipe": [
+      "Puff-shroom",
+      "Kernel-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Kernel Lure",
+    "recipe": [
+      "Magnet-shroom",
+      "Kernel-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sweet Corn",
+    "recipe": [
+      "Cabbage-pult",
+      "Kernel-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Butter Pot",
+    "recipe": [
+      "Flower Pot",
+      "Kernel-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Umbrella Boom",
+    "recipe": [
+      "Umbrella Leaf",
+      "Cherry Bomb"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Umbrella Shell",
+    "recipe": [
+      "Umbrella Leaf",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Umbrella Lamp",
+    "recipe": [
+      "Umbrella Leaf",
+      "Plantern"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Umbrella Cactus",
+    "recipe": [
+      "Umbrella Leaf",
+      "Cactus"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Umbrella Hoverleaf",
+    "recipe": [
+      "Umbrella Leaf",
+      "Blover"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Umbrella Cabbage",
+    "recipe": [
+      "Umbrella Leaf",
+      "Cabbage-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Leaf Pot",
+    "recipe": [
+      "Umbrella Leaf",
+      "Flower Pot"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Butter Leaf",
+    "recipe": [
+      "Umbrella Leaf",
+      "Kernel-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Garlic-shroom",
+    "recipe": [
+      "Garlic",
+      "Fume-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Garlic Blover",
+    "recipe": [
+      "Garlic",
+      "Blover"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Hypno Garlic",
+    "recipe": [
+      "Hypno-shroom",
+      "Garlic"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Garbbage-pult",
+    "recipe": [
+      "Garlic",
+      "Cabbage-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Garlic Pot",
+    "recipe": [
+      "Garlic",
+      "Flower Pot"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Clove-pult",
+    "recipe": [
+      "Garlic",
+      "Kernel-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Garlic Leaf",
+    "recipe": [
+      "Garlic",
+      "Umbrella Leaf"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Silver Sunflower",
+    "recipe": [
+      "Sunflower",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Gold Magnet",
+    "recipe": [
+      "Magnet-shroom",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Silver Cabbage",
+    "recipe": [
+      "Cabbage-pult",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Silver Pot",
+    "recipe": [
+      "Flower Pot",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Silver Kernel",
+    "recipe": [
+      "Kernel-pult",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Silver Leaf",
+    "recipe": [
+      "Umbrella Leaf",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Silver Garlic",
+    "recipe": [
+      "Garlic",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Twin Marigold",
+    "recipe": [
+      "Marigold",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Spring Melon",
+    "recipe": [
+      "Melon-pult",
+      "Fume-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Winter Melon",
+    "recipe": [
+      "Melon-pult",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Summer Melon",
+    "recipe": [
+      "Melon-pult",
+      "Jalapeno"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Stuffed Melon",
+    "recipe": [
+      "Melon-pult",
+      "Cabbage-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Melon Pot",
+    "recipe": [
+      "Melon-pult",
+      "Flower Pot"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cob-pult",
+    "recipe": [
+      "Melon-pult",
+      "Kernel-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Melon Rind",
+    "recipe": [
+      "Melon-pult",
+      "Umbrella Leaf"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Garlic-pult",
+    "recipe": [
+      "Melon-pult",
+      "Garlic"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Silver Melon",
+    "recipe": [
+      "Melon-pult",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Squalour",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Squash"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Glacier Tall-nut",
+    "recipe": [
+      "Wall-nut",
+      "Fertilizer",
+      "Ice-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Flame Tall-nut",
+    "recipe": [
+      "Wall-nut",
+      "Fertilizer",
+      "Jalapeno"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Cryoom-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Fertilizer",
+      "Ice-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Pyroom-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Fertilizer",
+      "Jalapeno"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Spikeicicle",
+    "recipe": [
+      "Spikeweed",
+      "Fertilizer",
+      "Ice-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Hearthrock",
+    "recipe": [
+      "Spikeweed",
+      "Fertilizer",
+      "Jalapeno"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Frost Cattail",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Ice-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Flame Cattail",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Jalapeno"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Cryo-cannon",
+    "recipe": [
+      "Kernel-pult",
+      "Kernel-pult",
+      "Fertilizer",
+      "Ice-shroom"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Pyro-cannon",
+    "recipe": [
+      "Kernel-pult",
+      "Kernel-pult",
+      "Fertilizer",
+      "Jalapeno"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Split Pea",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Gatling Pea",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Cherrepeater",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Cherry Bomb"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Split Cherry",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Cherry Bomb"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Gatling Cherry",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Cherry Bomb"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Snow Repeater",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Ice-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Split Snow Pea",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Ice-shroom"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Gatling Snow Pea",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Ice-shroom"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Icicle-shroom",
+    "recipe": [
+      "Peashooter",
+      "Puff-shroom",
+      "Ice-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Repeat-shroom",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Puff-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Split Pea-shroom",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Puff-shroom"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Gatling Pea-shroom",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Puff-shroom"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Gold Sunflower",
+    "recipe": [
+      "Sunflower",
+      "Marigold",
+      "Golden Bean"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Gold Cabbage",
+    "recipe": [
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Gold Pot",
+    "recipe": [
+      "Flower Pot",
+      "Marigold",
+      "Golden Bean"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Gold Kernel",
+    "recipe": [
+      "Kernel-pult",
+      "Marigold",
+      "Golden Bean"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Gold Leaf",
+    "recipe": [
+      "Umbrella Leaf",
+      "Marigold",
+      "Golden Bean"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Gold Garlic",
+    "recipe": [
+      "Garlic",
+      "Marigold",
+      "Golden Bean"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Gold Melon",
+    "recipe": [
+      "Melon-pult",
+      "Marigold",
+      "Golden Bean"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Cherry-bomber",
+    "recipe": [
+      "Peashooter",
+      "Cherry Bomb",
+      "Cherry Bomb"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Chewzilla",
+    "recipe": [
+      "Peashooter",
+      "Wall-nut",
+      "Chomper"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Charm-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Scaredy-shroom",
+      "Hypno-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Doomicle-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Ice-shroom",
+      "Doom-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Infernowood",
+    "recipe": [
+      "Torchwood",
+      "Jalapeno",
+      "Jalapeno"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Stygian Kelp",
+    "recipe": [
+      "Tangle Kelp",
+      "Threepeater",
+      "Squash"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Meteofruit",
+    "recipe": [
+      "Starfruit",
+      "Plantern",
+      "Magnet-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Pumpkarrier",
+    "recipe": [
+      "Pumpkin",
+      "Cactus",
+      "Blover"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Salad-pult",
+    "recipe": [
+      "Cabbage-pult",
+      "Kernel-pult",
+      "Melon-pult"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Diamond Leaf",
+    "recipe": [
+      "Umbrella Leaf",
+      "Marigold",
+      "Golden Bean",
+      "Garlic"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Gatling Pea Turret",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Threepeater",
+      "Jicamagicker"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Giant Chomper",
+    "recipe": [
+      "Chomper",
+      "Chomper",
+      "Chomper",
+      "Jicamagicker"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Kraken-shroom",
+    "recipe": [
+      "Tangle Kelp",
+      "Sea-shroom",
+      "Tangle Kelp",
+      "Jicamagicker"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Melon Cannon",
+    "recipe": [
+      "Melon-pult",
+      "Kernel-pult",
+      "Melon-pult",
+      "Jicamagicker"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Gatling Cherry-bomb",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Cherry Bomb",
+      "Cherry Bomb",
+      "Cherry Bomb"
+    ],
+    "type": "tier8"
+  },
+  {
+    "id": "Cherrybomber Drone",
+    "recipe": [
+      "Blover",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Cherry Bomb",
+      "Cherry Bomb",
+      "Cherry Bomb"
+    ],
+    "type": "tier9"
+  },
+  {
+    "id": "Cherrizilla",
+    "recipe": [
+      "Peashooter",
+      "Wall-nut",
+      "Chomper",
+      "Chomper",
+      "Cherry Bomb"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Garzilla",
+    "recipe": [
+      "Garlic",
+      "Peashooter",
+      "Wall-nut",
+      "Chomper",
+      "Chomper",
+      "Cherry Bomb"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Doominator-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Ice-shroom",
+      "Doom-shroom",
+      "Hypno-shroom",
+      "Ice-shroom"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Doominactus",
+    "recipe": [
+      "Cactus",
+      "Fume-shroom",
+      "Ice-shroom",
+      "Doom-shroom",
+      "Hypno-shroom",
+      "Ice-shroom"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Charmatron-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Scaredy-shroom",
+      "Hypno-shroom",
+      "Magnet-shroom",
+      "Hypno-shroom"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Oblivion-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Fertilizer",
+      "Ice-shroom",
+      "Fume-shroom",
+      "Ice-shroom",
+      "Doom-shroom"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Gatling Black Rock Turret",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Threepeater",
+      "Ice-shroom",
+      "Jalapeno",
+      "Jicamagicker"
+    ],
+    "type": "tier8"
+  },
+  {
+    "id": "Krakerbillion",
+    "recipe": [
+      "Tangle Kelp",
+      "Squash",
+      "Threepeater",
+      "Marigold",
+      "Marigold"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Inferno-squorch",
+    "recipe": [
+      "Torchwood",
+      "Jalapeno",
+      "Jalapeno",
+      "Squash",
+      "Jalapeno"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Obsidian Tall-nut",
+    "recipe": [
+      "Wall-nut",
+      "Fertilizer",
+      "Wall-nut",
+      "Fertilizer",
+      "Ice-shroom",
+      "Jalapeno"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Obsidian Mine-nut",
+    "recipe": [
+      "Wall-nut",
+      "Fertilizer",
+      "Wall-nut",
+      "Fertilizer",
+      "Ice-shroom",
+      "Jalapeno",
+      "Potato Mine"
+    ],
+    "type": "tier7"
+  },
+  {
+    "id": "Diamond Mine-nut",
+    "recipe": [
+      "Wall-nut",
+      "Fertilizer",
+      "Wall-nut",
+      "Fertilizer",
+      "Ice-shroom",
+      "Jalapeno",
+      "Potato Mine",
+      "Marigold"
+    ],
+    "type": "tier8"
+  },
+  {
+    "id": "Astrofruit",
+    "recipe": [
+      "Starfruit",
+      "Plantern",
+      "Cactus",
+      "Magnet-shroom",
+      "Magnet-shroom"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Astrover",
+    "recipe": [
+      "Starfruit",
+      "Plantern",
+      "Cactus",
+      "Magnet-shroom",
+      "Magnet-shroom",
+      "Blover"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Laser Pumpkin",
+    "recipe": [
+      "Blover",
+      "Pumpkin",
+      "Cactus",
+      "Magnet-shroom",
+      "Blover"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Chaser Pumpkin",
+    "recipe": [
+      "Blover",
+      "Pumpkin",
+      "Cactus",
+      "Magnet-shroom",
+      "Blover",
+      "Cherry Bomb"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Helios Cabbage",
+    "recipe": [
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean",
+      "Sunflower",
+      "Cabbage-pult"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Wither-pult",
+    "recipe": [
+      "Cabbage-pult",
+      "Kernel-pult",
+      "Melon-pult",
+      "Garlic",
+      "Melon-pult"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Cob-livion Cannon",
+    "recipe": [
+      "Kernel-pult",
+      "Kernel-pult",
+      "Fertilizer",
+      "Ice-shroom",
+      "Doom-shroom",
+      "Ice-shroom"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Gatling Doom",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Doom-shroom"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Gatling Frenzy-shroom",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Doom-shroom",
+      "Scaredy-shroom"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Solar Emper-nut",
+    "recipe": [
+      "Sunflower",
+      "Wall-nut",
+      "Wall-nut"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Gatling Icicle-shroom",
+    "recipe": [
+      "Puff-shroom",
+      "Ice-shroom",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Gatling Solaricle-shroom",
+    "recipe": [
+      "Puff-shroom",
+      "Ice-shroom",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Sunflower"
+    ],
+    "type": "tier7"
+  },
+  {
+    "id": "Hypnolia",
+    "recipe": [
+      "Hypno-shroom",
+      "Hypno-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chipnolia",
+    "recipe": [
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "Cherry Bomb"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Calamity-shroom",
+    "recipe": [
+      "Hypno-shroom",
+      "Doom-shroom",
+      "Doom-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Avarice-shroom",
+    "recipe": [
+      "Hypno-shroom",
+      "Doom-shroom",
+      "Doom-shroom",
+      "Marigold"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Emberthree",
+    "recipe": [
+      "Threepeater",
+      "Jalapeno",
+      "Jalapeno"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Phoenixree",
+    "recipe": [
+      "Threepeater",
+      "Jalapeno",
+      "Jalapeno",
+      "Jalapeno"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Tycoon Torch",
+    "recipe": [
+      "Threepeater",
+      "Torchwood",
+      "Marigold",
+      "Magnet-shroom"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Spikesidian",
+    "recipe": [
+      "Spikeweed",
+      "Fertilizer",
+      "Spikeweed",
+      "Fertilizer",
+      "Ice-shroom",
+      "Jalapeno"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Obsidian Spike-nut",
+    "recipe": [
+      "Spikeweed",
+      "Fertilizer",
+      "Spikeweed",
+      "Fertilizer",
+      "Ice-shroom",
+      "Jalapeno",
+      "Wall-nut"
+    ],
+    "type": "tier7"
+  },
+  {
+    "id": "Magic Cattail",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Lily Pad",
+      "Fertilizer",
+      "Squash"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Tesla Umbrella",
+    "recipe": [
+      "Cactus",
+      "Plantern",
+      "Plantern",
+      "Umbrella Leaf"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Mechanized Pumpkin",
+    "recipe": [
+      "Magnet-shroom",
+      "Pumpkin",
+      "Magnet-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Radiant Pot",
+    "recipe": [
+      "Flower Pot",
+      "Marigold",
+      "Golden Bean",
+      "Sunflower"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Radiant Pad",
+    "recipe": [
+      "Lily Pad",
+      "Marigold",
+      "Golden Bean",
+      "Sunflower"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Emerald Leaf",
+    "recipe": [
+      "Umbrella Leaf",
+      "Cabbage-pult",
+      "Umbrella Leaf",
+      "Marigold",
+      "Golden Bean",
+      "Garlic"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Ruby Leaf",
+    "recipe": [
+      "Umbrella Leaf",
+      "Cabbage-pult",
+      "Umbrella Leaf",
+      "Marigold",
+      "Golden Bean",
+      "Garlic",
+      "Melon-pult"
+    ],
+    "type": "tier7"
+  },
+  {
+    "id": "Inferno Sparkwood",
+    "recipe": [
+      "Torchwood",
+      "Jalapeno",
+      "Jalapeno",
+      "Squash",
+      "Jalapeno",
+      "Starfruit"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Atomheart Plantern",
+    "recipe": [
+      "Fume-shroom",
+      "Ice-shroom",
+      "Doom-shroom",
+      "Fume-shroom",
+      "Fertilizer",
+      "Ice-shroom",
+      "Plantern"
+    ],
+    "type": "tier7"
+  },
+  {
+    "id": "Giant Angler Chomper",
+    "recipe": [
+      "Chomper",
+      "Chomper",
+      "Chomper",
+      "Chomper",
+      "Plantern",
+      "Jicamagicker"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Magnet King",
+    "recipe": [
+      "Magnet-shroom",
+      "Magnet-shroom",
+      "Plantern",
+      "Cherry Bomb"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Grey Pea",
+    "recipe": [
+      "Peashooter",
+      "Bucket"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Buck-nut",
+    "recipe": [
+      "Wall-nut",
+      "Bucket"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Grey Pea-shroom",
+    "recipe": [
+      "Peashooter",
+      "Bucket",
+      "Puff-shroom"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Bucket-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Magnet-shroom",
+      "Bucket"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Siderodoom-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Magnet-shroom",
+      "Bucket"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Steel Star",
+    "recipe": [
+      "Starfruit",
+      "Magnet-shroom",
+      "Bucket"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Steel Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Magnet-shroom",
+      "Bucket"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Rust Kernel",
+    "recipe": [
+      "Kernel-pult",
+      "Magnet-shroom",
+      "Bucket"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Football Tall-nut",
+    "recipe": [
+      "Wall-nut",
+      "Fertilizer",
+      "Football Helmet"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Football-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Magnet-shroom",
+      "Bucket",
+      "Football Helmet"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Mecha-nut",
+    "recipe": [
+      "Wall-nut",
+      "Bucket",
+      "Wall-nut",
+      "Bucket"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Giga-nut",
+    "recipe": [
+      "Wall-nut",
+      "Bucket",
+      "Wall-nut",
+      "Bucket",
+      "Wall-nut",
+      "Bucket",
+      "Wall-nut",
+      "Bucket"
+    ],
+    "type": "tier8"
+  },
+  {
+    "id": "Clown Star",
+    "recipe": [
+      "Starfruit",
+      "Magnet-shroom",
+      "Jack-in-the-box"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Pumpklown",
+    "recipe": [
+      "Pumpkin",
+      "Magnet-shroom",
+      "Jack-in-the-box"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Miner Star",
+    "recipe": [
+      "Starfruit",
+      "Magnet-shroom",
+      "Pickaxe"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Miner Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Magnet-shroom",
+      "Pickaxe"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Chrono Pea",
+    "recipe": [
+      "Peashooter",
+      "Space Debris"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chrono-nut",
+    "recipe": [
+      "Wall-nut",
+      "Space Debris"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Chrono Kernel-pult",
+    "recipe": [
+      "Kernel-pult",
+      "Magnet-shroom",
+      "Space Debris"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Chrono Doom",
+    "recipe": [
+      "Doom-shroom",
+      "Magnet-shroom",
+      "Space Debris"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Paradox Kernel-pult",
+    "recipe": [
+      "Kernel-pult",
+      "Magnet-shroom",
+      "Space Debris",
+      "Kernel-pult",
+      "Puff-shroom",
+      "Kernel-pult",
+      "Puff-shroom",
+      "Kernel-pult",
+      "Puff-shroom"
+    ],
+    "type": "tier9"
+  },
+  {
+    "id": "Astro-nut",
+    "recipe": [
+      "Kernel-pult",
+      "Magnet-shroom",
+      "Space Debris",
+      "Kernel-pult",
+      "Puff-shroom",
+      "Kernel-pult",
+      "Puff-shroom",
+      "Kernel-pult",
+      "Puff-shroom",
+      "Wall-nut"
+    ],
+    "type": "tier10"
+  },
+  {
+    "id": "Buck-shroom Squad",
+    "recipe": [
+      "Peashooter",
+      "Bucket",
+      "Puff-shroom",
+      "Peashooter",
+      "Bucket",
+      "Puff-shroom",
+      "Peashooter",
+      "Bucket",
+      "Puff-shroom",
+      "Magnet-shroom"
+    ],
+    "type": "tier10"
+  },
+  {
+    "id": "Napalm-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Magnet-shroom",
+      "Bucket",
+      "Football Helmet",
+      "Melon-pult",
+      "Jalapeno"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Armor Pumpkin",
+    "recipe": [
+      "Pumpkin",
+      "Magnet-shroom",
+      "Jack-in-the-box",
+      "Magnet-shroom",
+      "Pumpkin",
+      "Cherry Bomb",
+      "Jicamagicker"
+    ],
+    "type": "tier7"
+  },
+  {
+    "id": "Endoflame",
+    "recipe": [
+      "Sunflower",
+      "Torchwood"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Swordmaster Starfruit",
+    "recipe": [
+      "Starfruit",
+      "Fertilizer"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Swordsage Starfruit",
+    "recipe": [
+      "Starfruit",
+      "Fertilizer",
+      "Fertilizer"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Howietail",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Lily Pad",
+      "Fertilizer",
+      "Squash",
+      "**PIPI5**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Chimptron",
+    "recipe": [
+      "Peashooter",
+      "Space Debris",
+      "Pumpkin",
+      "Cherry Bomb",
+      "Pumpkin",
+      "Starfruit",
+      "**PIPI5**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Furyflower",
+    "recipe": [
+      "Marigold",
+      "Sunflower",
+      "Marigold",
+      "Golden Bean",
+      "Spikeweed",
+      "Tangle Kelp",
+      "Jicamagicker",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Tall-cat",
+    "recipe": [
+      "Wall-nut",
+      "Fertilizer",
+      "Lily Pad",
+      "Fertilizer",
+      "Squash",
+      "**PIPI5**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Prathodef",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "**PIPI5**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Chaos Star",
+    "recipe": [
+      "Starfruit",
+      "Magnet-shroom",
+      "Jack-in-the-box",
+      "Jalapeno",
+      "Ice-shroom",
+      "Jicamagicker",
+      "**PIPI5**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Cherry Jerry",
+    "recipe": [
+      "Cherry Bomb",
+      "Cherry Bomb",
+      "Magnet-shroom",
+      "Bucket",
+      "Football Helmet",
+      "Pickaxe",
+      "Jack-in-the-box",
+      "Space Debris",
+      "**PIPI5**"
+    ],
+    "type": "tier9",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Bleanie",
+    "recipe": [
+      "Blover",
+      "Magnet-shroom",
+      "Golden Bean",
+      "Golden Bean",
+      "Golden Bean",
+      "Golden Bean",
+      "Blover",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Sus-shroom",
+    "recipe": [
+      "Sunflower",
+      "Puff-shroom",
+      "Space Debris",
+      "Tangle Kelp",
+      "Sea-shroom",
+      "Tangle Kelp",
+      "Jicamagicker",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "True-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Scaredy-shroom",
+      "Hypno-shroom",
+      "Magnet-shroom",
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Jaladevin",
+    "recipe": [
+      "Jalapeno",
+      "Peashooter",
+      "Puff-shroom",
+      "Lily Pad",
+      "Sea-shroom",
+      "Flower Pot",
+      "**PIPI5**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Justin-pult",
+    "recipe": [
+      "Cabbage-pult",
+      "Kernel-pult",
+      "Melon-pult",
+      "Garlic",
+      "Melon-pult",
+      "Potato Mine",
+      "Wall-nut",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Tree of Wisdom",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Lily Pad",
+      "Fertilizer",
+      "Squash",
+      "**PIPI5**",
+      "Peashooter",
+      "Space Debris",
+      "Pumpkin",
+      "Cherry Bomb",
+      "Pumpkin",
+      "Starfruit",
+      "**PIPI5**",
+      "Marigold",
+      "Sunflower",
+      "Marigold",
+      "Golden Bean",
+      "Spikeweed",
+      "Tangle Kelp",
+      "Jicamagicker",
+      "**PIPI5**",
+      "Wall-nut",
+      "Fertilizer",
+      "Lily Pad",
+      "Fertilizer",
+      "Squash",
+      "**PIPI5**",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "**PIPI5**",
+      "Starfruit",
+      "Magnet-shroom",
+      "Jack-in-the-box",
+      "Jalapeno",
+      "Ice-shroom",
+      "Jicamagicker",
+      "**PIPI5**",
+      "Cherry Bomb",
+      "Cherry Bomb",
+      "Magnet-shroom",
+      "Bucket",
+      "Football Helmet",
+      "Pickaxe",
+      "Jack-in-the-box",
+      "Space Debris",
+      "**PIPI5**",
+      "Blover",
+      "Magnet-shroom",
+      "Golden Bean",
+      "Golden Bean",
+      "Golden Bean",
+      "Golden Bean",
+      "Blover",
+      "**PIPI5**",
+      "Sunflower",
+      "Puff-shroom",
+      "Space Debris",
+      "Tangle Kelp",
+      "Sea-shroom",
+      "Tangle Kelp",
+      "Jicamagicker",
+      "**PIPI5**",
+      "Fume-shroom",
+      "Scaredy-shroom",
+      "Hypno-shroom",
+      "Magnet-shroom",
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "**PIPI5**",
+      "Jalapeno",
+      "Peashooter",
+      "Puff-shroom",
+      "Lily Pad",
+      "Sea-shroom",
+      "Flower Pot",
+      "**PIPI5**",
+      "Cabbage-pult",
+      "Kernel-pult",
+      "Melon-pult",
+      "Garlic",
+      "Melon-pult",
+      "Potato Mine",
+      "Wall-nut",
+      "**PIPI5**"
+    ],
+    "type": "tier∞",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Dodo Bush",
+    "recipe": [
+      "Umbrella Leaf",
+      "Cabbage-pult",
+      "Cabbage-pult",
+      "Flower Pot",
+      "Squash",
+      "Tangle Kelp",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Primal Drunkflower",
+    "recipe": [
+      "Sunflower",
+      "Marigold",
+      "Golden Bean",
+      "Pumpkin",
+      "Magnet-shroom",
+      "Pickaxe",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Stray Cat",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Jalapeno",
+      "Lily Pad",
+      "Fertilizer",
+      "Ice-shroom",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Dark Matter Chomper",
+    "recipe": [
+      "Cherry Bomb",
+      "Chomper",
+      "Starfruit",
+      "Plantern",
+      "Magnet-shroom",
+      "Space Debris",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Hole-shroom Keymaster",
+    "recipe": [
+      "Sea-shroom",
+      "Magnet-shroom",
+      "Sea-shroom",
+      "Cactus",
+      "Space Debris",
+      "Space Debris",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Rotobaga Aria Forme",
+    "recipe": [
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean",
+      "Umbrella Leaf",
+      "Blover",
+      "Jicamagicker",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Ghost Reaper",
+    "recipe": [
+      "Hypno-shroom",
+      "Doom-shroom",
+      "Doom-shroom",
+      "Jalapeno",
+      "Ice-shroom",
+      "Lily Pad",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Jack-in-a-doom",
+    "recipe": [
+      "Doom-shroom",
+      "Magnet-shroom",
+      "Jack-in-the-box"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Solar-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Sunflower"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sunny-shroom",
+    "recipe": [
+      "Scaredy-shroom",
+      "Sunflower"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Doomflower",
+    "recipe": [
+      "Sunflower",
+      "Doom-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Metal Squash",
+    "recipe": [
+      "Squash",
+      "Bucket"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cherry Bomb Drone",
+    "recipe": [
+      "Cherry Bomb",
+      "Blover"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cherry Pot",
+    "recipe": [
+      "Flower Pot",
+      "Cherry Bomb"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Silver Doom-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Gold Doom-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Marigold",
+      "Golden Bean"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Squash-nut",
+    "recipe": [
+      "Wall-nut",
+      "Squash"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Totem-nut",
+    "recipe": [
+      "Wall-nut",
+      "Threepeater"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Toasty-nut",
+    "recipe": [
+      "Torchwood",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Thorn-nut",
+    "recipe": [
+      "Wall-nut",
+      "Cactus"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Float-nut",
+    "recipe": [
+      "Wall-nut",
+      "Blover"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Star-nut",
+    "recipe": [
+      "Wall-nut",
+      "Starfruit"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Shell-nut",
+    "recipe": [
+      "Pumpkin",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Nutnetic",
+    "recipe": [
+      "Wall-nut",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Brassi-nut",
+    "recipe": [
+      "Wall-nut",
+      "Cabbage-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Butter-nut",
+    "recipe": [
+      "Wall-nut",
+      "Kernel-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Stinky-nut",
+    "recipe": [
+      "Wall-nut",
+      "Garlic"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Melon-nut",
+    "recipe": [
+      "Wall-nut",
+      "Melon-pult"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Cork-nut",
+    "recipe": [
+      "Wall-nut",
+      "Fume-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Silver-nut",
+    "recipe": [
+      "Wall-nut",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Golden-nut",
+    "recipe": [
+      "Wall-nut",
+      "Marigold",
+      "Golden Bean"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Electric Pea",
+    "recipe": [
+      "Peashooter",
+      "Cherry Bomb",
+      "Cherry Bomb",
+      "Cactus",
+      "Magnet-shroom"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Fortress-nut",
+    "recipe": [
+      "Wall-nut",
+      "Wall-nut",
+      "Fertilizer",
+      "Wall-nut",
+      "Jicamagicker"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Hypno Pea",
+    "recipe": [
+      "Hypno-shroom",
+      "Peashooter"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Hypno Repeater",
+    "recipe": [
+      "Hypno-shroom",
+      "Peashooter",
+      "Peashooter"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Split Hypno Pea",
+    "recipe": [
+      "Hypno-shroom",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Gatling Hypno Pea",
+    "recipe": [
+      "Hypno-shroom",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Ice Pot",
+    "recipe": [
+      "Flower Pot",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Fin-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Sea-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Doom Star",
+    "recipe": [
+      "Starfruit",
+      "Doom-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Floaty-shroom",
+    "recipe": [
+      "Scaredy-shroom",
+      "Blover"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Snaily-shroom",
+    "recipe": [
+      "Scaredy-shroom",
+      "Sea-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Shieldwood",
+    "recipe": [
+      "Torchwood",
+      "Pumpkin"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Mini Umbrella",
+    "recipe": [
+      "Umbrella Leaf",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Ice Blover",
+    "recipe": [
+      "Blover",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Doom Blover",
+    "recipe": [
+      "Blover",
+      "Doom-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Hypno Melon",
+    "recipe": [
+      "Melon-pult",
+      "Hypno-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Slice-pult",
+    "recipe": [
+      "Melon-pult",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Kaley-pult",
+    "recipe": [
+      "Cabbage-pult",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bursty-shroom",
+    "recipe": [
+      "Scaredy-shroom",
+      "Cherry Bomb"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Decay-pult",
+    "recipe": [
+      "Cabbage-pult",
+      "Kernel-pult",
+      "Melon-pult",
+      "Garlic",
+      "Melon-pult",
+      "Puff-shroom"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Sea-nut",
+    "recipe": [
+      "Wall-nut",
+      "Sea-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Vulcannon",
+    "recipe": [
+      "Kernel-pult",
+      "Kernel-pult",
+      "Fertilizer",
+      "Jalapeno",
+      "Jalapeno",
+      "Cherry Bomb"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Omega Penny",
+    "recipe": [
+      "Umbrella Leaf",
+      "Cabbage-pult",
+      "Cabbage-pult",
+      "Flower Pot",
+      "Squash",
+      "Tangle Kelp",
+      "**Suspicious Tree Dew**",
+      "Sunflower",
+      "Marigold",
+      "Golden Bean",
+      "Pumpkin",
+      "Magnet-shroom",
+      "Pickaxe",
+      "**Suspicious Tree Dew**",
+      "Lily Pad",
+      "Fertilizer",
+      "Jalapeno",
+      "Lily Pad",
+      "Fertilizer",
+      "Ice-shroom",
+      "**Suspicious Tree Dew**",
+      "Cherry Bomb",
+      "Chomper",
+      "Starfruit",
+      "Plantern",
+      "Magnet-shroom",
+      "Space Debris",
+      "**Suspicious Tree Dew**",
+      "Sea-shroom",
+      "Magnet-shroom",
+      "Sea-shroom",
+      "Cactus",
+      "Space Debris",
+      "Space Debris",
+      "**Suspicious Tree Dew**",
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean",
+      "Umbrella Leaf",
+      "Blover",
+      "Jicamagicker",
+      "**Suspicious Tree Dew**",
+      "Hypno-shroom",
+      "Doom-shroom",
+      "Doom-shroom",
+      "Jalapeno",
+      "Ice-shroom",
+      "Lily Pad",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier-∞",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Frost Atropine",
+    "recipe": [
+      "Fume-shroom",
+      "Ice-shroom",
+      "Doom-shroom",
+      "Fume-shroom",
+      "Fertilizer",
+      "Ice-shroom",
+      "Plantern",
+      "Ice-shroom",
+      "Lily Pad",
+      "Fertilizer",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier11",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Roaring-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Doom-shroom",
+      "Cactus",
+      "**PIPI5**",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier5",
+    "visibility": "hidden"
+  },
+  {
+    "id": "FRIENDTAIL",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Jalapeno",
+      "Ice-shroom",
+      "**PIPI5**",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "ERAMPENO",
+    "recipe": [
+      "Jalapeno",
+      "Doom-shroom",
+      "**PIPI5**",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier4",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Gastater",
+    "recipe": [
+      "Imitater",
+      "**PIPI5**",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier3",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Crisscross Appletree",
+    "recipe": [
+      "Scaredy-shroom",
+      "Cherry Bomb",
+      "Umbrella Leaf",
+      "Wall-nut",
+      "**PIPI5**"
+    ],
+    "type": "tier5",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Fluff-shroom",
+    "recipe": [
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "Cherry Bomb",
+      "Aqua Aloe",
+      "Snow Lotus",
+      "Firnace",
+      "**PIPI5**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Radishzilla",
+    "recipe": [
+      "Cabbage-pult",
+      "Chomper",
+      "Chomper",
+      "Chomper",
+      "Jicamagicker",
+      "**PIPI5**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Holly-nut",
+    "recipe": [
+      "Potato Mine",
+      "Wall-nut",
+      "Saw-me-not",
+      "Aqua Aloe",
+      "**PIPI5**"
+    ],
+    "type": "tier5",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Potassium Prophet",
+    "recipe": [
+      "Sunflower",
+      "Sunflower",
+      "Umbrella Leaf",
+      "Marigold",
+      "Golden Bean",
+      "Plantern",
+      "Starfruit",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Heliosaur",
+    "recipe": [
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean",
+      "Sunflower",
+      "Cabbage-pult",
+      "Sunflower",
+      "Chomper",
+      "Sunflower",
+      "Magnet-shroom",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier10",
+    "visibility": "hidden"
+  },
+  {
+    "id": "HIGG SHOT",
+    "recipe": [
+      "Hypno-shroom",
+      "Doom-shroom",
+      "Doom-shroom",
+      "Marigold",
+      "Umbrella Leaf",
+      "Cherry Bomb",
+      "Pumpkin",
+      "Wall-nut",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier9",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Cultivation Pot",
+    "recipe": [
+      "Plantern",
+      "Flower Pot",
+      "Hypno-shroom",
+      "Fume-shroom",
+      "Sunflower",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Spruce Firnace",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Firnace"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Saw Firnace",
+    "recipe": [
+      "Saw-me-not",
+      "Firnace"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Lotus Firnace",
+    "recipe": [
+      "Snow Lotus",
+      "Firnace"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Aloe Firnace",
+    "recipe": [
+      "Aqua Aloe",
+      "Firnace"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Spruce Sawshooter",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Saw-me-not"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Snowbloom Spruce",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Snow Lotus"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Spruce Sprayshooter",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Aqua Aloe"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Twin Saw-me-not",
+    "recipe": [
+      "Saw-me-not",
+      "Saw-me-not"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Shield Lotus",
+    "recipe": [
+      "Saw-me-not",
+      "Snow Lotus"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Soak-me-not",
+    "recipe": [
+      "Saw-me-not",
+      "Aqua Aloe"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Aloe Alba",
+    "recipe": [
+      "Snow Lotus",
+      "Aqua Aloe"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bamblotus",
+    "recipe": [
+      "Snow Lotus",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bambloe",
+    "recipe": [
+      "Aqua Aloe",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bamboo Archer",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bamblade",
+    "recipe": [
+      "Saw-me-not",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bamblock Firnace",
+    "recipe": [
+      "Firnace",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Firnurse",
+    "recipe": [
+      "Aqua Aloe",
+      "Snow Lotus",
+      "Firnace"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Spruce Ballista",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Spruce Sharpshooter",
+      "Fertilizer"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Spruce Supershooter",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Saw-me-not",
+      "Aqua Aloe"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Atlantis Ballista",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Spruce Sharpshooter",
+      "Aqua Aloe",
+      "Fertilizer"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Boreal Lifereaver",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Spruce Sharpshooter",
+      "Aqua Aloe",
+      "Saw-me-not",
+      "Snow Lotus"
+    ],
+    "type": "tier5"
+  }
+]

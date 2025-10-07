@@ -1,0 +1,21 @@
+{
+  "author": [
+    "SnappyDragon"
+  ],
+  "min_bot_version": "3.3.0",
+  "hidden": false,
+  "install_msg": "Thank you for installing the Zen Garden cog! Get started by running the `gardenhelp` command.",
+  "requirements": [
+    "pillow",
+    "pytz"
+  ],
+  "short": "A PvZ Zen Garden game based on the PvZ Fusion mod.",
+  "description": "An interactive Plants vs. Zombies Zen Garden cog where users can plant, grow, sell, and fuse hundreds of custom plants. This cog was inspired by the PvZ Fusion mod and was originally made for the r/PvZHeroes Discord server.",
+  "end_user_data_statement": "This cog stores data about users necessary for its functionality. This includes your Discord user ID, garden contents, inventory, sun balance, mastery levels, and discovered fusions. All data is stored locally on the bot's machine and is not shared with third parties.",
+  "tags": [
+    "games",
+    "economy",
+    "plants",
+    "pvz"
+  ]
+}

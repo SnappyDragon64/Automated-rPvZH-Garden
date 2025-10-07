@@ -1,0 +1,41 @@
+[
+  {
+    "id": "default",
+    "name": "Default",
+    "image_file": "garden",
+    "required_fusions": []
+  },
+  {
+    "id": "castle_town",
+    "name": "Castle Town",
+    "image_file": "garden_castle_town",
+    "required_fusions": [
+        "Crisscross Appletree",
+        "Fluff-shroom",
+        "Radishzilla",
+        "Holly-nut"
+    ]
+  },
+  {
+    "id": "true_lab",
+    "name": "True Lab",
+    "image_file": "garden_true_lab",
+    "required_fusions": [
+        "Roaring-shroom",
+        "FRIENDTAIL",
+        "ERAMPENO",
+        "Gastater"
+    ]
+  },
+  {
+    "id": "temple_of_higgelios",
+    "name": "Temple of Higgelios",
+    "image_file": "garden_temple_of_higgelios",
+    "required_fusions": [
+        "Potassium Prophet",
+        "Heliosaur",
+        "HIGG SHOT",
+        "Cultivation Pot"
+    ]
+  }
+]

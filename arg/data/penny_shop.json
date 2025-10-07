@@ -1,0 +1,30 @@
+{
+  "bucket": {
+    "name": "Bucket",
+    "cost": 2500
+  },
+  "football_helmet": {
+    "name": "Football Helmet",
+    "cost": 2000
+  },
+  "pickaxe": {
+    "name": "Pickaxe",
+    "cost": 2000
+  },
+  "jack-in-the-box": {
+    "name": "Jack-in-the-box",
+    "cost": 2000
+  },
+  "space_debris": {
+    "name": "Space Debris",
+    "cost": 6400
+  },
+  "pipis": {
+    "name": "**PIPI5**",
+    "cost": 5555
+  },
+  "std": {
+    "name": "**Suspicious Tree Dew**",
+    "cost": 5555
+  }
+}

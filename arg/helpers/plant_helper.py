@@ -1,83 +1,64 @@
 import random
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
+
+from ..models import BasePlant, SeedlingDefinition
 
 
 class PlantHelper:
     """
-    Manages the master list of all plant and seedling definitions.
+    Manages the primary list of all plant and seedling definitions.
     This class loads and provides access to base plant data, categorized for different game mechanics.
     """
 
-    def __init__(self, base_plants_list: List[Dict[str, Any]], seedlings_list: List[Dict[str, Any]]):
-        """Initializes the PlantHelper with all necessary game data."""
+    def __init__(self, base_plants_list: List[BasePlant], seedlings_list: List[SeedlingDefinition]):
+        """Initializes the PlantHelper with dataclass objects provided by DataHelper."""
 
-        self.base_plants: List[Dict[str, Any]] = []
-        self.base_plants_by_id: Dict[str, Dict[str, Any]] = {}
-        self._load_base_plants(base_plants_list)
+        self.base_plants: List[BasePlant] = base_plants_list
+        self.base_plants_by_id: Dict[str, BasePlant] = {p.id: p for p in base_plants_list}
 
-        self.seedlings_by_id: Dict[str, Dict[str, Any]] = {s['id']: s for s in seedlings_list}
+        self.seedlings_by_id: Dict[str, SeedlingDefinition] = {s.id: s for s in seedlings_list}
 
-        self.plants_by_category: Dict[str, List[Dict[str, Any]]] = {}
+        self.plants_by_category: Dict[str, List[BasePlant]] = {}
         self._categorize_plants()
-
-    def _load_base_plants(self, loaded_plants_list: List[Dict[str, Any]]):
-        """Processes and stores the list of base plants."""
-
-        if not loaded_plants_list:
-            print("CRITICAL: No base plants were provided to PlantHelper. Fallback is likely active.")
-
-        processed_plants_list = []
-        for plant_dict in loaded_plants_list:
-            if isinstance(plant_dict, dict) and 'id' in plant_dict and 'name' not in plant_dict:
-                plant_dict['name'] = plant_dict['id']
-
-            processed_plants_list.append(plant_dict)
-
-        self.base_plants = [p.copy() for p in processed_plants_list]
-        self.base_plants_by_id = {p['id']: p.copy() for p in self.base_plants}
 
     def _categorize_plants(self):
         """Groups all base plants by their 'category' field for efficient lookup."""
 
         for plant in self.base_plants:
-            category = plant.get("category")
+            category = plant.category
 
             if category:
                 if category not in self.plants_by_category:
                     self.plants_by_category[category] = []
 
-                self.plants_by_category[category].append(plant.copy())
+                self.plants_by_category[category].append(plant)
 
-        if not self.plants_by_category.get("vanilla"):
+        if "vanilla" not in self.plants_by_category:
             print("CRITICAL WARNING: No plants with category 'vanilla' were found. Regular seedlings will NOT grow!")
 
-        for seedling_id, seedling_data in self.seedlings_by_id.items():
-            category = seedling_data.get("category")
+        for seedling_id, seedling_def in self.seedlings_by_id.items():
+            category = seedling_def.category
 
-            if not self.plants_by_category.get(category):
+            if category not in self.plants_by_category:
                 print(
                     f"CRITICAL WARNING: No plants found for category '{category}'. The seedling '{seedling_id}' will "
-                    f"NOT grow! "
+                    f"NOT grow!"
                 )
 
-    def get_base_plant_by_id(self, plant_id: str) -> Optional[Dict[str, Any]]:
-        """Retrieves a base plant's definition dictionary by its unique ID."""
+    def get_base_plant_by_id(self, plant_id: str) -> Optional[BasePlant]:
         return self.base_plants_by_id.get(plant_id)
 
-    def get_seedling_by_id(self, seedling_id: str) -> Optional[Dict[str, Any]]:
-        """Retrieves a seedling's definition by its unique ID."""
+    def get_seedling_by_id(self, seedling_id: str) -> Optional[SeedlingDefinition]:
         return self.seedlings_by_id.get(seedling_id)
 
-    def get_all_seedlings(self) -> List[Dict[str, Any]]:
-        """Returns a list of all loaded seedling definitions."""
+    def get_all_seedlings(self) -> List[SeedlingDefinition]:
         return list(self.seedlings_by_id.values())
 
-    def get_random_plant_by_category(self, category: str) -> Optional[Dict[str, Any]]:
-        """Returns a random plant from a specified category."""
+    def get_random_plant_by_category(self, category: str) -> Optional[BasePlant]:
         plant_list = self.plants_by_category.get(category)
 
         if not plant_list:
             print(f"CRITICAL ERROR: Category '{category}' is empty or does not exist. Cannot get a random plant.")
             return None
 
-        return random.choice(plant_list).copy()
+        return random.choice(plant_list)

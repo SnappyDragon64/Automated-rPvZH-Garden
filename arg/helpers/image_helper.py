@@ -1,13 +1,15 @@
 import io
 import pathlib
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple, Set
 
 import discord
 
-from helpers import LoggingHelper
+from .logging_helper import LoggingHelper
+from ..models import UserProfileView, PlantedSeedling
 
 try:
     from PIL import Image, ImageDraw, ImageFont
+
     PIL_AVAILABLE = True
 except ImportError:
     PIL_AVAILABLE = False
@@ -15,7 +17,7 @@ except ImportError:
 
 
 class ImageHelper:
-    """Handles all PIL-based image generation for the cog."""
+    """Handles PIL-based image generation for the cog."""
 
     _PLANT_IMAGE_ASSET_SIZE: int = 128
     _PLANT_SCALED_SIZE_PROFILE: int = 120
@@ -45,13 +47,9 @@ class ImageHelper:
         self.seedling_image_template: Optional[Image.Image] = None
 
     def _sanitize_id_for_filename(self, plant_id: str) -> str:
-        """Replaces spaces with underscores to create a valid filename component."""
-
         return plant_id.replace(" ", "_")
 
     def _get_image_path(self, filename: str) -> pathlib.Path:
-        """Constructs the full path to an image asset within the data directory."""
-
         return self.data_path / "images" / filename
 
     def get_image_file_for_plant(self, plant_id: str) -> Optional[discord.File]:
@@ -69,7 +67,6 @@ class ImageHelper:
             except Exception as e:
                 self.logger.log_to_discord(f"DEBUG: Failed to create discord.File for {image_path}: {e}", "WARNING")
                 return None
-
         return None
 
     def load_assets(self):
@@ -95,16 +92,12 @@ class ImageHelper:
 
         try:
             path = self._get_image_path(filename)
-
             if not path.exists():
                 self.logger.init_log(f"Image asset '{filename}' not found at {path}.", "ERROR")
                 return None
-
             img = Image.open(path).convert("RGBA")
-
             if resize and img.size != (self._PLANT_IMAGE_ASSET_SIZE, self._PLANT_IMAGE_ASSET_SIZE):
                 img = img.resize((self._PLANT_IMAGE_ASSET_SIZE, self._PLANT_IMAGE_ASSET_SIZE), Image.Resampling.LANCZOS)
-
             return img
         except Exception as e:
             self.logger.init_log(f"Failed to load or process image asset '{filename}': {e}", "ERROR")
@@ -130,18 +123,17 @@ class ImageHelper:
 
         draw.text((x, y), progress_text, font=font, fill=(255, 255, 255, 255), stroke_width=2,
                   stroke_fill=(0, 0, 0, 255))
-
         return img_copy
 
-    async def generate_garden_image(self, user_data: Dict[str, Any], unlocked_slots: set,
-                                    background_filename: str = "garden.png") -> Optional[discord.File]:
-        """Generates a complete garden profile image for a user."""
+    async def generate_garden_image(
+            self, profile: UserProfileView, unlocked_slots: Set[int], background_filename: str = "garden.png"
+    ) -> Optional[discord.File]:
+        """Generates a complete garden profile image for a user using their UserProfileView."""
 
         if not self._is_ready:
             return None
 
         base_image_to_use = self._load_image_asset(background_filename, resize=False)
-
         if not base_image_to_use:
             base_image_to_use = self.base_garden_image
 
@@ -150,7 +142,7 @@ class ImageHelper:
 
         garden_image = base_image_to_use.copy()
 
-        garden_slots = user_data.get("garden", [])
+        garden_slots = profile.garden
         offset_for_centering = (self._PLANT_IMAGE_ASSET_SIZE - self._PLANT_SCALED_SIZE_PROFILE) // 2
 
         for i, slot_content in enumerate(garden_slots):
@@ -161,36 +153,29 @@ class ImageHelper:
                 plant_asset_to_render = self.locked_slot_image
             elif slot_content is None:
                 plant_asset_to_render = self.empty_slot_image
-            elif isinstance(slot_content, dict):
-                plant_type = slot_content.get("type")
-                plant_id = slot_content.get("id")
+            else:
+                plant_id = slot_content.id
 
-                if plant_type == "seedling":
+                if isinstance(slot_content, PlantedSeedling):
                     template_to_use = self.seedling_image_template
-
                     sanitized_filename = f"{self._sanitize_id_for_filename(plant_id)}.png"
                     loaded_template = self._load_image_asset(sanitized_filename, resize=True)
-
                     if loaded_template:
                         template_to_use = loaded_template
 
                     if template_to_use:
-                        progress = slot_content.get("progress", 0.0)
-                        plant_asset_to_render = self._draw_progress_on_seedling(template_to_use, progress)
-                elif plant_id:
+                        plant_asset_to_render = self._draw_progress_on_seedling(template_to_use, slot_content.progress)
+                else:
                     sanitized_filename = f"{self._sanitize_id_for_filename(plant_id)}.png"
                     plant_asset_to_render = self._load_image_asset(sanitized_filename)
 
             if plant_asset_to_render:
                 scaled_asset = plant_asset_to_render.resize(
-                    (self._PLANT_SCALED_SIZE_PROFILE, self._PLANT_SCALED_SIZE_PROFILE),
-                    Image.Resampling.LANCZOS
+                    (self._PLANT_SCALED_SIZE_PROFILE, self._PLANT_SCALED_SIZE_PROFILE), Image.Resampling.LANCZOS
                 )
-
                 slot_base_x, slot_base_y = self.PLANT_SLOT_COORDINATES[i]
                 paste_x = slot_base_x + offset_for_centering
                 paste_y = slot_base_y + offset_for_centering
-
                 garden_image.paste(scaled_asset, (int(paste_x), int(paste_y)), scaled_asset)
 
         img_byte_arr = io.BytesIO()

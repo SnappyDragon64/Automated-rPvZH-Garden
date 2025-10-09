@@ -1,14 +1,16 @@
 import asyncio
+import dataclasses
 import json
-import traceback
 import time
+import traceback
 from collections import Counter
 from datetime import datetime, timedelta
-from typing import Any, Dict, Optional, List
+from typing import Optional, List
 
 import discord
 from redbot.core import Config, commands, data_manager
 
+from decorators import is_cog_ready, is_not_locked
 from helpers import (
     TimeHelper,
     PlantHelper,
@@ -22,10 +24,10 @@ from helpers import (
     TradeHelper,
     ShopHelper,
     BackgroundHelper,
+    GameStateHelper,
     PIL_AVAILABLE,
 )
-
-from decorators import is_cog_ready, is_not_locked
+from models import PlantedSeedling, PlantedPlant, ShopItemDefinition
 
 
 class ARG(commands.Cog):
@@ -39,30 +41,26 @@ class ARG(commands.Cog):
         self._initialized = False
 
         self.bot = bot
-        self.config = Config.get_conf(self, identifier=1234567892)
-        self.config.register_global(users={}, flags={"plant_growth_duration_minutes": 240})
+        self.config = Config.get_conf(self, identifier=291154617134223360)
+        self.config.register_global(game_state={})
 
         self.cog_data_path = data_manager.bundled_data_path(self)
         self.lock_helper = LockHelper()
         self.logger = LoggingHelper(bot, self.DISCORD_LOG_CHANNEL_ID)
         self.data_loader = DataHelper(self.cog_data_path, self.logger)
-
         self.data_loader.load_all_data()
 
-        self.image_helper = ImageHelper(self.cog_data_path, self.logger)
-        self.sales_helper = SalesHelper(self.data_loader.sales_prices, self.CURRENCY_EMOJI)
-        self.plant_helper = PlantHelper(self.data_loader.base_plants, self.data_loader.seedlings_data)
-        self.fusion_helper = FusionHelper(self.data_loader.fusion_plants, self.data_loader.materials_data,
-                                          self.plant_helper)
-        self.background_helper = BackgroundHelper(self.data_loader.backgrounds_data)
-        self.trade_helper = TradeHelper(self.lock_helper)
+        self.game_state_helper = GameStateHelper(self.config, self.logger)
 
-        self.data: Dict[str, Any] = {"users": {}, "flags": {}}
-
+        self.image_helper: Optional[ImageHelper] = None
+        self.sales_helper: Optional[SalesHelper] = None
+        self.plant_helper: Optional[PlantHelper] = None
+        self.fusion_helper: Optional[FusionHelper] = None
+        self.background_helper: Optional[BackgroundHelper] = None
+        self.trade_helper: Optional[TradeHelper] = None
         self.garden_helper: Optional[GardenHelper] = None
         self.shop_helper: Optional[ShopHelper] = None
 
-        self.image_helper.load_assets()
         self.growth_task = self.bot.loop.create_task(self.startup_and_growth_loop())
 
     def cog_unload(self):
@@ -74,19 +72,20 @@ class ARG(commands.Cog):
         self.lock_helper.clear_all_locks()
         self.logger.init_log("Zen Garden cog systems are now offline.", "INFO")
 
-    async def _load_and_initialize_data(self):
-        """Handles the initial loading of data from Red's config."""
+    async def _load_and_initialize_helpers(self):
+        await self.game_state_helper.load_game_state()
 
-        await self.logger.log_to_discord("System Startup: Loading data from local Red config.", "INFO")
+        self.image_helper = ImageHelper(self.cog_data_path, self.logger)
+        self.sales_helper = SalesHelper(self.data_loader.sales_prices, self.CURRENCY_EMOJI)
+        self.plant_helper = PlantHelper(self.data_loader.base_plants, self.data_loader.seedlings_data)
+        self.fusion_helper = FusionHelper(self.data_loader.fusion_plants, self.data_loader.materials_data,
+                                          self.plant_helper)
+        self.background_helper = BackgroundHelper(self.data_loader.backgrounds_data)
+        self.trade_helper = TradeHelper(self.lock_helper)
 
-        self.data = await self.config.all()
-
-        self.data.setdefault("users", {})
-        self.data.setdefault("flags", {})
-
-        self.garden_helper = GardenHelper(self.data["users"], self.config)
+        self.garden_helper = GardenHelper(self.game_state_helper)
         self.shop_helper = ShopHelper(
-            self.data["flags"],
+            self.game_state_helper,
             self.plant_helper,
             self.data_loader.penny_shop_data,
             self.data_loader.rux_shop_data,
@@ -94,37 +93,7 @@ class ARG(commands.Cog):
             self.data_loader.materials_data
         )
 
-    async def _initialize_global_flags(self):
-        """Ensures all necessary global flags are present in the data, setting defaults if not."""
-
-        if self.shop_helper is None:
-            return
-
-        flags = self.data["flags"]
-        flags_updated = False
-
-        def set_default_flag(key, value):
-            nonlocal flags_updated
-            if key not in flags:
-                flags[key] = value
-                flags_updated = True
-                self.logger.init_log(f"Global Flags: Initialized '{key}' to '{value}'.", "INFO")
-
-        for item_id, details in self.data_loader.rux_shop_data.items():
-            if details.get("category") == "limited":
-                set_default_flag(f"{item_id}_stock", details.get("stock", 0))
-
-        set_default_flag("plant_growth_duration_minutes", 240)
-        set_default_flag("treasure_shop_refresh_interval_hours", 1)
-        set_default_flag("treasure_shop_stock", [])
-        set_default_flag("last_treasure_shop_refresh", None)
-        set_default_flag("dave_shop_stock", [])
-        set_default_flag("last_dave_shop_refresh", None)
-
-        if flags_updated:
-            await self.config.flags.set(flags)
-            await self.logger.log_to_discord("Global Flags: One or more flags were initialized. Configuration saved.",
-                                             "INFO")
+        self.image_helper.load_assets()
 
     async def startup_and_growth_loop(self):
         """The main background task for the cog."""
@@ -133,8 +102,7 @@ class ARG(commands.Cog):
         await self.logger.flush_init_log_queue()
         await self.logger.log_to_discord("Growth Loop: System Online.", "INFO")
 
-        await self._load_and_initialize_data()
-        await self._initialize_global_flags()
+        await self._load_and_initialize_helpers()
 
         await self.shop_helper.refresh_penny_shop_if_needed(self.logger)
         await self.shop_helper.refresh_dave_shop_if_needed(self.logger)
@@ -147,35 +115,37 @@ class ARG(commands.Cog):
             try:
                 loop_start_time = time.monotonic()
 
-                growth_duration = self.data["flags"].get("plant_growth_duration_minutes", 240)
+                growth_duration = self.game_state_helper.get_global_state("plant_growth_duration_minutes", 240)
                 base_progress = 100.0 / (growth_duration if growth_duration > 0 else 240)
 
-                users_copy = self.data["users"].copy()
-                for user_id_str, user_data in users_copy.items():
-                    user_id_int = int(user_id_str)
-                    time_mastery_bonus = 1 + (user_data.get("time_mastery", 0) * 0.1)
+                all_user_ids = self.garden_helper.get_all_user_ids()
 
-                    for i, slot_data in enumerate(user_data.get("garden", [])):
-                        if isinstance(slot_data, dict) and slot_data.get("type") == "seedling":
+                for user_id_int in all_user_ids:
+                    profile = self.garden_helper.get_user_profile_view(user_id_int)
+
+                    time_mastery_bonus = 1 + (profile.time_mastery * 0.1)
+
+                    for i, slot_content in enumerate(profile.garden):
+                        if isinstance(slot_content, PlantedSeedling):
                             growth_multiplier = 1.0
-                            seedling_id = slot_data.get("id")
+                            seedling_id = slot_content.id
                             if seedling_def := self.plant_helper.get_seedling_by_id(seedling_id):
-                                growth_multiplier = seedling_def.get("growth_multiplier", 1.0)
+                                growth_multiplier = seedling_def.growth_multiplier
 
                             final_progress = base_progress * time_mastery_bonus * growth_multiplier
 
-                            await self.garden_helper.update_seedling_progress(user_id_int, i, final_progress)
+                            self.garden_helper.update_seedling_progress(user_id_int, i, final_progress)
 
-                            slot_data_after_update = user_data.get("garden", [])[i]
-                            if isinstance(slot_data_after_update, dict) and slot_data_after_update.get("progress",
-                                                                                                       0.0) >= 100.0:
-                                await self._mature_plant(user_id_int, i, slot_data_after_update)
+                            updated_profile = self.garden_helper.get_user_profile_view(user_id_int)
+                            updated_slot = updated_profile.garden[i]
+
+                            if isinstance(updated_slot, PlantedSeedling) and updated_slot.progress >= 100.0:
+                                await self._mature_plant(user_id_int, i, updated_slot)
 
                 await self.shop_helper.refresh_penny_shop_if_needed(self.logger)
                 await self.shop_helper.refresh_dave_shop_if_needed(self.logger)
 
-                await self.config.users.set(self.data["users"])
-                await self.config.flags.set(self.data["flags"])
+                await self.game_state_helper.commit_to_disk()
 
                 loop_duration = time.monotonic() - loop_start_time
                 await self.logger.log_to_discord(
@@ -183,7 +153,7 @@ class ARG(commands.Cog):
                     "INFO")
             except Exception as e:
                 await self.logger.log_to_discord(
-                    f"Growth Loop: CRITICAL Anomaly in cycle {loop_counter}: {e}\n{traceback.format_exc()}","CRITICAL")
+                    f"Growth Loop: CRITICAL Anomaly in cycle {loop_counter}: {e}\n{traceback.format_exc()}", "CRITICAL")
 
             loop_counter += 1
             now = datetime.now()
@@ -192,51 +162,53 @@ class ARG(commands.Cog):
             wait_seconds = (target_time - now).total_seconds()
             await asyncio.sleep(max(0.1, wait_seconds))
 
-    async def _mature_plant(self, user_id: int, plot_index: int, seedling_data: dict):
+    async def _mature_plant(self, user_id: int, plot_index: int, seedling_obj: PlantedSeedling):
         """Handles the logic for when a seedling reaches 100% growth."""
 
-        seedling_id = seedling_data.get("id")
+        seedling_id = seedling_obj.id
 
         plant_category = "vanilla"
 
         if seedling_def := self.plant_helper.get_seedling_by_id(seedling_id):
-            plant_category = seedling_def.get("category", "vanilla")
+            plant_category = seedling_def.category
 
-        grown_plant = self.plant_helper.get_random_plant_by_category(plant_category)
+        grown_plant_def = self.plant_helper.get_random_plant_by_category(plant_category)
 
-        if grown_plant is None:
+        if grown_plant_def is None:
             await self.logger.log_to_discord(
                 f"CRITICAL: Failed to get a plant for category '{plant_category}' for user {user_id}. Maturation "
                 f"aborted.",
                 "CRITICAL")
             return
 
-        await self.garden_helper.set_garden_plot(user_id, plot_index, grown_plant)
+        newly_matured_plant = PlantedPlant(
+            id=grown_plant_def.id,
+            name=grown_plant_def.name,
+            type=grown_plant_def.type
+        )
+        self.garden_helper.set_garden_plot(user_id, plot_index, newly_matured_plant)
 
         discord_user = self.bot.get_user(user_id)
-
         if not discord_user:
             return
 
         embed = discord.Embed(
             title="🌱 Plant Maturation Complete",
-            description=f"Alert, {discord_user.mention}: Your **{seedling_data.get('name', 'Seedling')}** in plot "
-                        f"{plot_index + 1} has matured into a **{grown_plant.get('name', grown_plant['id'])}**.",
+            description=f"Alert, {discord_user.mention}: Your **{seedling_obj.name}** in plot "
+                        f"{plot_index + 1} has matured into a **{newly_matured_plant.name}**.",
             color=discord.Color.green()
         )
         embed.set_footer(text="Penny System Monitoring")
 
-        image_file_to_send = self.image_helper.get_image_file_for_plant(grown_plant.get("id"))
-
+        image_file_to_send = self.image_helper.get_image_file_for_plant(newly_matured_plant.id)
         if image_file_to_send:
             embed.set_image(url=f"attachment://{image_file_to_send.filename}")
 
-        notification_channel_id = seedling_data.get("notification_channel_id")
+        notification_channel_id = seedling_obj.notification_channel_id
         target_channel = self.bot.get_channel(notification_channel_id) if notification_channel_id else None
 
         sent_to_channel = False
-
-        if isinstance(target_channel, discord.TextChannel):
+        if discord.TextChannel:
             try:
                 await target_channel.send(content=discord_user.mention, embed=embed, file=image_file_to_send,
                                           allowed_mentions=discord.AllowedMentions(users=True))
@@ -246,7 +218,7 @@ class ARG(commands.Cog):
 
         if not sent_to_channel:
             try:
-                dm_image_file = self.image_helper.get_image_file_for_plant(grown_plant.get("id"))
+                dm_image_file = self.image_helper.get_image_file_for_plant(newly_matured_plant.id)
 
                 if dm_image_file:
                     embed.set_image(url=f"attachment://{dm_image_file.filename}")
@@ -272,7 +244,7 @@ class ARG(commands.Cog):
                 )
                 await ctx.send(embed=profile_lock_embed)
 
-        user_data = self.garden_helper.get_user_data(target_user.id)
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
         rank = self.garden_helper.get_user_rank(target_user.id)
         rank_str = str(rank) if rank is not None else "N/A"
 
@@ -283,12 +255,12 @@ class ARG(commands.Cog):
             display_text_garden = True
         else:
             try:
-                active_bg_id = user_data.get("active_background", "default")
+                active_bg_id = profile.active_background
                 bg_def = self.background_helper.get_background_by_id(active_bg_id)
-                bg_filename = f"{bg_def.get('image_file', 'garden')}.png" if bg_def else "garden.png"
+                bg_filename = f"{bg_def.image_file}.png" if bg_def else "garden.png"
 
-                unlocked_slots = {i + 1 for i in range(12) if self.garden_helper.is_slot_unlocked(user_data, i + 1)}
-                garden_image_file = await self.image_helper.generate_garden_image(user_data, unlocked_slots,
+                unlocked_slots = {i + 1 for i in range(12) if self.garden_helper.is_slot_unlocked(profile, i + 1)}
+                garden_image_file = await self.image_helper.generate_garden_image(profile, unlocked_slots,
                                                                                   background_filename=bg_filename)
             except Exception as e:
                 await self.logger.log_to_discord(
@@ -301,8 +273,8 @@ class ARG(commands.Cog):
         embed.set_author(name=f"{target_user.display_name}: Zen Garden Dossier",
                          icon_url=target_user.display_avatar.url)
 
-        sun_mastery = user_data.get("mastery", 0)
-        time_mastery = user_data.get("time_mastery", 0)
+        sun_mastery = profile.sun_mastery
+        time_mastery = profile.time_mastery
 
         sun_mastery_display = f"\n**Sun Mastery:** {sun_mastery} ({1 + (0.1 * sun_mastery):.2f}x sell boost)" \
             if sun_mastery > 0 else ""
@@ -311,17 +283,17 @@ class ARG(commands.Cog):
 
         embed.add_field(
             name="📈 Core Metrics",
-            value=f"**Solar Energy Balance:** {user_data.get('balance', 0):,} {self.CURRENCY_EMOJI}\n"
+            value=f"**Solar Energy Balance:** {profile.balance:,} {self.CURRENCY_EMOJI}\n"
                   f"**Garden User Rank:** #{rank_str}{sun_mastery_display}{time_mastery_display}",
             inline=False
         )
 
         if display_text_garden:
-            col1, col2 = self.garden_helper.get_text_garden_display(user_data)
+            col1, col2 = self.garden_helper.get_text_garden_display(profile)
             embed.add_field(name="🌳 Garden Plots", value=col1, inline=True)
             embed.add_field(name="🌳 Garden Plots", value=col2, inline=True)
 
-        inventory_items = user_data.get("inventory", [])
+        inventory_items = profile.inventory
         inventory_field_value = "No assets acquired."
 
         if inventory_items:
@@ -354,10 +326,10 @@ class ARG(commands.Cog):
     async def daily_command(self, ctx: commands.Context):
         """Collect your daily solar energy stipend."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
         current_date_est = TimeHelper.get_est_date()
 
-        if user_data.get("last_daily") == current_date_est:
+        if profile.last_daily == current_date_est:
             now_est = datetime.now(TimeHelper.EST)
             next_reset_est = (now_est + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
             unix_ts = int(next_reset_est.timestamp())
@@ -372,15 +344,15 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        await self.garden_helper.add_balance(ctx.author.id, 1000)
-        await self.garden_helper.set_last_daily(ctx.author.id, current_date_est)
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        self.garden_helper.add_balance(ctx.author.id, 1000)
+        self.garden_helper.set_last_daily(ctx.author.id, current_date_est)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
 
         embed = discord.Embed(
             title=f"☀️ Daily Solar Energy Collected",
             description=f"User {ctx.author.mention}, your daily stipend of **1000** {self.CURRENCY_EMOJI} has been "
                         f"successfully credited to your account.\n "
-                        f"Your current solar balance is now **{user_data['balance']:,}** {self.CURRENCY_EMOJI}.",
+                        f"Your current solar balance is now **{profile.balance:,}** {self.CURRENCY_EMOJI}.",
             color=discord.Color.green()
         )
         embed.set_footer(text="Penny - Financial Systems Interface")
@@ -401,8 +373,8 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        garden = user_data["garden"]
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        garden = profile.garden
         cost_per_seedling = 100
 
         valid_slots_to_plant = []
@@ -411,7 +383,7 @@ class ARG(commands.Cog):
         for slot_num_1based in set(slots_to_plant_in):
             if not (1 <= slot_num_1based <= 12):
                 error_messages.append(f"Plot {slot_num_1based}: Invalid designation.")
-            elif not self.garden_helper.is_slot_unlocked(user_data, slot_num_1based):
+            elif not self.garden_helper.is_slot_unlocked(profile, slot_num_1based):
                 error_messages.append(f"Plot {slot_num_1based}: Access restricted (Locked).")
             elif garden[slot_num_1based - 1] is not None:
                 error_messages.append(f"Plot {slot_num_1based}: Currently occupied.")
@@ -426,29 +398,29 @@ class ARG(commands.Cog):
 
         actual_cost = len(valid_slots_to_plant) * cost_per_seedling
 
-        if user_data["balance"] < actual_cost:
+        if profile.balance < actual_cost:
             embed = discord.Embed(title="❌ Insufficient Solar Energy Reserves",
                                   description=f"Cultivation cost for {len(valid_slots_to_plant)} plot(s): "
                                               f"**{actual_cost:,}** {self.CURRENCY_EMOJI}.\n"
                                               f"Your available balance: "
-                                              f"**{user_data['balance']:,}** {self.CURRENCY_EMOJI}.",
+                                              f"**{profile.balance:,}** {self.CURRENCY_EMOJI}.",
                                   color=discord.Color.red())
             await ctx.send(embed=embed)
             return
 
-        await self.garden_helper.remove_balance(ctx.author.id, actual_cost)
+        self.garden_helper.remove_balance(ctx.author.id, actual_cost)
 
         for slot_num_1based in valid_slots_to_plant:
-            await self.garden_helper.plant_seedling(
+            self.garden_helper.plant_seedling(
                 ctx.author.id, slot_num_1based - 1, "Seedling", ctx.channel.id
             )
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
 
         planted_slots_str = ", ".join(map(str, sorted(valid_slots_to_plant)))
         desc = f"Seedling cultivation initiated in plot(s): **{planted_slots_str}**.\n"
         desc += f"Solar energy expended: **{actual_cost:,}** {self.CURRENCY_EMOJI}.\n"
-        desc += f"Remaining solar balance: **{user_data['balance']:,}** {self.CURRENCY_EMOJI}."
+        desc += f"Remaining solar balance: **{profile.balance:,}** {self.CURRENCY_EMOJI}."
 
         if error_messages:
             desc += "\n\n**Advisory:** Some plots were not processed:\n" + "\n".join(
@@ -474,9 +446,9 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
 
-        sale_results = self.sales_helper.process_sales(user_data, slots_to_sell_from)
+        sale_results = self.sales_helper.process_sales(profile, slots_to_sell_from)
 
         total_earnings = sale_results["total_earnings"]
         sold_plants_details = sale_results["sold_plants_details"]
@@ -496,18 +468,18 @@ class ARG(commands.Cog):
             return
 
         if total_earnings > 0:
-            await self.garden_helper.add_balance(ctx.author.id, total_earnings)
+            self.garden_helper.add_balance(ctx.author.id, total_earnings)
 
         if mastery_gained > 0:
-            await self.garden_helper.increment_mastery(ctx.author.id, mastery_gained)
+            self.garden_helper.increment_mastery(ctx.author.id, mastery_gained)
 
         if time_mastery_gained > 0:
-            await self.garden_helper.increment_time_mastery(ctx.author.id, time_mastery_gained)
+            self.garden_helper.increment_time_mastery(ctx.author.id, time_mastery_gained)
 
         for plot_idx_0based in plots_to_clear:
-            await self.garden_helper.set_garden_plot(ctx.author.id, plot_idx_0based, None)
+            self.garden_helper.set_garden_plot(ctx.author.id, plot_idx_0based, None)
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
 
         desc = f"User {ctx.author.mention}, asset liquidation protocol executed successfully.\n\n"
 
@@ -516,16 +488,16 @@ class ARG(commands.Cog):
 
         if mastery_gained > 0:
             desc += f"\n\n**Your Sun Mastery has increased by {mastery_gained} to a new level of" \
-                    f"{user_data.get('mastery', 0)}!**"
+                    f"{profile.sun_mastery}!**"
 
         if time_mastery_gained > 0:
             desc += f"\n\n**Your Time Mastery has increased by {time_mastery_gained} to a new level of" \
-                    f"{user_data.get('time_mastery', 0)}!**"
+                    f"{profile.time_mastery}!**"
 
         if total_earnings > 0:
             desc += f"\n\n**Total Solar Energy Acquired from Transaction:** {total_earnings:,} {self.CURRENCY_EMOJI}"
 
-        desc += f"\n**Updated Solar Balance:** {user_data['balance']:,} {self.CURRENCY_EMOJI}"
+        desc += f"\n**Updated Solar Balance:** {profile.balance:,} {self.CURRENCY_EMOJI}"
 
         if error_messages:
             desc += "\n\n**System Advisory:** Note that some assets could not be liquidated due to the following" \
@@ -552,32 +524,33 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
         cleared_slots_details = []
         error_messages = []
+        plots_to_actually_clear = []
 
         for slot_num_1based in set(slots_to_clear):
             plot_idx_0based = slot_num_1based - 1
 
             if not (0 <= plot_idx_0based < 12):
                 error_messages.append(f"Plot {slot_num_1based}: Invalid designation.")
-            elif not self.garden_helper.is_slot_unlocked(user_data, slot_num_1based):
+            elif not self.garden_helper.is_slot_unlocked(profile, slot_num_1based):
                 error_messages.append(f"Plot {slot_num_1based}: Access restricted (Locked).")
             else:
-                occupant = user_data["garden"][plot_idx_0based]
+                occupant = profile.garden[plot_idx_0based]
 
                 if occupant is None:
                     error_messages.append(f"Plot {slot_num_1based}: Already unoccupied.")
-                elif not isinstance(occupant, dict) or occupant.get("type") != "seedling":
-                    plant_name = occupant.get("name", "This asset") if isinstance(occupant, dict) else "This asset"
+                elif isinstance(occupant, PlantedPlant):
                     error_messages.append(
-                        f"Plot {slot_num_1based}: Contains a mature plant (**{plant_name}**). Use `{ctx.prefix}sell` "
+                        f"Plot {slot_num_1based}: Contains a mature plant (**{occupant.name}**). Use `{ctx.prefix}sell` "
                         f"instead.")
+                elif isinstance(occupant, PlantedSeedling):
+                    cleared_slots_details.append(f"Plot {slot_num_1based} (previously contained **{occupant.name}**)")
+                    plots_to_actually_clear.append(plot_idx_0based)
                 else:
-                    occupant_name = occupant.get("name", "Unidentified Occupant")
-                    cleared_slots_details.append(f"Plot {slot_num_1based} (previously contained **{occupant_name}**)")
-
-                await self.garden_helper.set_garden_plot(ctx.author.id, plot_idx_0based, None)
+                    error_messages.append(
+                        f"Plot {slot_num_1based}: Contains an unknown entity that cannot be shoveled.")
 
         if not cleared_slots_details:
             desc = "The plot clearing operation yielded no changes.\n\n"
@@ -588,6 +561,9 @@ class ARG(commands.Cog):
             embed.set_footer(text="Penny - Garden Maintenance Subroutine")
             await ctx.send(embed=embed)
             return
+
+        for plot_idx in plots_to_actually_clear:
+            self.garden_helper.set_garden_plot(ctx.author.id, plot_idx, None)
 
         desc = f"User {ctx.author.mention}, plot clearing operation has been successfully executed.\n\n"
         desc += "**Plots Cleared of Occupants:**\n" + "\n".join([f"• {detail}" for detail in cleared_slots_details])
@@ -606,8 +582,8 @@ class ARG(commands.Cog):
     async def reorder_command(self, ctx: commands.Context, *new_order_str: str):
         """Reconfigure the physical arrangement of plants within unlocked garden plots."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        garden = user_data["garden"]
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        garden = profile.garden
         num_garden_slots = len(garden)
 
         if not new_order_str:
@@ -637,7 +613,7 @@ class ARG(commands.Cog):
             return
 
         unlocked_slot_indices_0based = sorted(
-            [i for i in range(num_garden_slots) if self.garden_helper.is_slot_unlocked(user_data, i + 1)])
+            [i for i in range(num_garden_slots) if self.garden_helper.is_slot_unlocked(profile, i + 1)])
         num_unlocked_slots = len(unlocked_slot_indices_0based)
 
         if len(new_order_original_slots_1_indexed) != num_unlocked_slots:
@@ -697,7 +673,7 @@ class ARG(commands.Cog):
         for i, dest_idx_0based in enumerate(unlocked_slot_indices_0based):
             new_full_garden_state[dest_idx_0based] = temp_new_garden_unlocked_contents[i]
 
-        await self.garden_helper.set_full_garden(ctx.author.id, new_full_garden_state)
+        self.garden_helper.set_full_garden(ctx.author.id, new_full_garden_state)
 
         embed = discord.Embed(title="✅ Garden Matrix Reconfigured Successfully",
                               description=f"User {ctx.author.mention}, your Zen Garden plot arrangement has been "
@@ -803,7 +779,7 @@ class ARG(commands.Cog):
             f"▫️ `{prefix}gardenhelp` - Display this command manifest."
         ))
 
-        current_growth_duration = self.data["flags"].get("plant_growth_duration_minutes", 240)
+        current_growth_duration = self.game_state_helper.get_global_state("plant_growth_duration_minutes")
         hours, minutes = divmod(current_growth_duration, 60)
         duration_str = f"{hours} hour{'s' if hours != 1 else ''}" if hours > 0 else ""
         if minutes > 0:
@@ -817,8 +793,8 @@ class ARG(commands.Cog):
     async def ruxshop_command(self, ctx: commands.Context, page: int = 1):
         """Access Rux's Bazaar for upgrades and rare goods."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        user_inventory = user_data.get("inventory", [])
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        user_inventory = profile.inventory
 
         if not self.data_loader.rux_shop_data:
             embed = discord.Embed(title="🛒 Rux's Bazaar",
@@ -834,19 +810,19 @@ class ARG(commands.Cog):
                                    key=lambda item: (item[1].get("category", "zzz"), item[1].get("cost", 0)))
 
         for item_id, item_details in sorted_shop_items:
-            if not isinstance(item_details, dict):
+            if not isinstance(item_details, ShopItemDefinition):
                 continue
 
-            is_limited = item_details.get("category") == "limited"
+            is_limited = item_details.category == "limited"
             is_owned = item_id in user_inventory
 
             if is_owned and not is_limited:
                 continue
 
-            if any(req not in user_inventory for req in item_details.get("requirements", [])):
+            if any(req not in user_inventory for req in item_details.requirements):
                 continue
 
-            stock = self.data["flags"].get(f"{item_id}_stock", 0)
+            stock = self.game_state_helper.get_rux_stock(item_id)
 
             if is_limited and stock <= 0 and not is_owned:
                 continue
@@ -870,8 +846,10 @@ class ARG(commands.Cog):
                 description = details.get("description", "No description available.")
 
                 item_entry = f"**{name}** (`{item_id}`)\nCost: **{cost:,}** {self.CURRENCY_EMOJI}"
-                if details.get("category") == "limited":
-                    stock = self.data["flags"].get(f"{item_id}_stock", "N/A")
+
+                if details.category == "limited":
+                    stock = self.game_state_helper.get_rux_stock(item_id)
+
                     if item_id in user_inventory:
                         item_entry += " (**Acquired** - Max 1)"
                     else:
@@ -884,7 +862,7 @@ class ARG(commands.Cog):
         embed = discord.Embed(
             title="🛒 Rux's Bazaar",
             description=f"Hey, {ctx.author.mention}.\n\n"
-                        f"**Your Current Solar Energy Balance:** {user_data.get('balance', 0):,} "
+                        f"**Your Current Solar Energy Balance:** {profile.balance:,} "
                         f"{self.CURRENCY_EMOJI}\n\n"
                         f"**Available Items for Procurement:**\n{shop_content}",
             color=discord.Color.teal()
@@ -901,7 +879,7 @@ class ARG(commands.Cog):
     async def ruxbuy_command(self, ctx: commands.Context, item_id_to_buy: str):
         """Procure an item from Rux's Bazaar."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
 
         item_id_lower = item_id_to_buy.lower()
         actual_item_key = next((k for k in self.data_loader.rux_shop_data if k.lower() == item_id_lower), None)
@@ -915,8 +893,8 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        item_name = item_details.get('name', actual_item_key)
-        if item_details.get("category") != "limited" and actual_item_key in user_data["inventory"]:
+        item_name = item_details.name
+        if item_details.category != "limited" and actual_item_key in profile.inventory:
             embed = discord.Embed(title="❌ Already Acquired",
                                   description=f"Rux says: You've already got the **{item_name}**. I don't do returns "
                                               f"or duplicates!",
@@ -924,17 +902,17 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        cost = item_details.get("cost", 0)
-        if user_data["balance"] < cost:
+        cost = item_details.cost
+        if profile.balance < cost:
             embed = discord.Embed(title="❌ Insufficient Solar Energy",
                                   description=f"Rux says: To get the **{item_name}**, you need **{cost:,}** "
-                                              f"{self.CURRENCY_EMOJI}. You only have **{user_data['balance']:,}** "
+                                              f"{self.CURRENCY_EMOJI}. You only have **{profile.balance:,}** "
                                               f"{self.CURRENCY_EMOJI}.",
                                   color=discord.Color.red())
             await ctx.send(embed=embed)
             return
 
-        missing_reqs = [req for req in item_details.get("requirements", []) if req not in user_data["inventory"]]
+        missing_reqs = [req for req in item_details.requirements if req not in profile.inventory]
         if missing_reqs:
             missing_reqs_names = [f"`{self.data_loader.rux_shop_data.get(req, {}).get('name', req)}`" for req in
                                   missing_reqs]
@@ -945,9 +923,8 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        if item_details.get("category") == "limited":
-            stock_key = f"{actual_item_key}_stock"
-            if self.data["flags"].get(stock_key, 0) <= 0:
+        if item_details.category == "limited":
+            if self.game_state_helper.get_rux_stock(actual_item_key) <= 0:
                 embed = discord.Embed(title="❌ Item Out of Stock",
                                       description=f"Rux says: The **{item_name}** is all sold out! Should've been "
                                                   f"quicker, pal.",
@@ -955,19 +932,18 @@ class ARG(commands.Cog):
                 await ctx.send(embed=embed)
                 return
 
-        await self.garden_helper.remove_balance(ctx.author.id, cost)
-        await self.garden_helper.add_item_to_inventory(ctx.author.id, actual_item_key)
+        self.garden_helper.remove_balance(ctx.author.id, cost)
+        self.garden_helper.add_item_to_inventory(ctx.author.id, actual_item_key)
 
         success_desc = f"Rux says: A deal's a deal! The **{item_name}** is all yours, pal.\n\n"
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
         success_desc += f"Sun debited: **{cost:,}** {self.CURRENCY_EMOJI}.\n"
-        success_desc += f"New balance: **{user_data['balance']:,}** {self.CURRENCY_EMOJI}."
+        success_desc += f"New balance: **{profile.balance:,}** {self.CURRENCY_EMOJI}."
 
-        if item_details.get("category") == "limited":
-            stock_key = f"{actual_item_key}_stock"
-            self.data["flags"][stock_key] -= 1
-            await self.config.flags.set(self.data["flags"])
-            success_desc += f"\nThis was a limited item. Stock remaining: **{self.data['flags'].get(stock_key, 0)}**."
+        if item_details.category == "limited":
+            new_stock = max(self.game_state_helper.get_rux_stock(actual_item_key) - 1, 0)
+            self.game_state_helper.set_rux_stock(actual_item_key, new_stock)
+            success_desc += f"\nThis was a limited item. Stock remaining: **{new_stock}**."
 
         embed = discord.Embed(title="🛒 Deal's a Deal!", description=success_desc, color=discord.Color.green())
         embed.set_footer(text="Penny - Procurement Division")
@@ -977,7 +953,8 @@ class ARG(commands.Cog):
     @is_cog_ready()
     async def pennyshop_command(self, ctx: commands.Context):
         """Displays the current stock of Penny's exclusive treasures."""
-        current_stock = self.data["flags"].get("treasure_shop_stock", [])
+
+        current_stock = self.game_state_helper.get_global_state("treasure_shop_stock")
         next_refresh = self.shop_helper.get_next_penny_refresh_time(datetime.now(TimeHelper.EST))
 
         embed = discord.Embed(
@@ -1015,8 +992,8 @@ class ARG(commands.Cog):
     async def pennybuy_command(self, ctx: commands.Context, *, item_id: str):
         """Purchase an item from Penny's Treasures."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        shop_stock = self.data["flags"].get("treasure_shop_stock", [])
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        shop_stock = self.game_state_helper.get_global_state("treasure_shop_stock")
 
         item_to_buy, item_index = None, -1
 
@@ -1033,26 +1010,31 @@ class ARG(commands.Cog):
             return
 
         price = item_to_buy.get("price", 9999999)
-        if user_data["balance"] < price:
+        if profile.balance < price:
             embed = discord.Embed(title="❌ Insufficient Solar Energy",
                                   description=f"You require **{price:,}** {self.CURRENCY_EMOJI} to procure this "
                                               f"treasure, but your available balance is only "
-                                              f"**{user_data['balance']:,}**.",
+                                              f"**{profile.balance:,}**.",
                                   color=discord.Color.red())
             await ctx.send(embed=embed)
             return
 
-        await self.garden_helper.remove_balance(ctx.author.id, price)
-        await self.garden_helper.add_item_to_inventory(ctx.author.id, item_to_buy["id"])
-        self.data["flags"]["treasure_shop_stock"][item_index]["stock"] = 0
+        self.garden_helper.remove_balance(ctx.author.id, price)
+        self.garden_helper.add_item_to_inventory(ctx.author.id, item_to_buy["id"])
 
-        await self.config.flags.set(self.data["flags"])
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        current_penny_stock = self.game_state_helper.get_global_state("treasure_shop_stock", [])
+
+        if item_index < len(current_penny_stock):
+            current_penny_stock[item_index]["stock"] = 0
+
+        self.game_state_helper.set_global_state("treasure_shop_stock", current_penny_stock)
+
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
 
         embed = discord.Embed(
             title="✅ Treasure Procured!",
             description=f"You have successfully acquired the **{item_to_buy.get('name')}** for **{price:,}** "
-                        f"{self.CURRENCY_EMOJI}.\nYour new balance is **{user_data['balance']:,}** "
+                        f"{self.CURRENCY_EMOJI}.\nYour new balance is **{profile.balance:,}** "
                         f"{self.CURRENCY_EMOJI}.",
             color=discord.Color.green()
         )
@@ -1063,8 +1045,8 @@ class ARG(commands.Cog):
     async def daveshop_command(self, ctx: commands.Context):
         """Displays Crazy Dave's Twiddydinkies."""
 
-        stock = self.data["flags"].get("dave_shop_stock", [])
-        last_refresh_ts = self.data["flags"].get("last_dave_shop_refresh", time.time())
+        stock = self.game_state_helper.get_global_state("dave_shop_stock")
+        last_refresh_ts = self.game_state_helper.get_global_state("last_dave_shop_refresh")
         next_refresh = (datetime.fromtimestamp(last_refresh_ts, tz=TimeHelper.EST) + timedelta(hours=1)).replace(
             minute=0, second=0, microsecond=0)
 
@@ -1103,8 +1085,8 @@ class ARG(commands.Cog):
     async def davebuy_command(self, ctx: commands.Context, *, item_id: str):
         """Purchase an item from Crazy Dave's Twiddydinkies."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        shop_stock = self.data["flags"].get("dave_shop_stock", [])
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        shop_stock = self.game_state_helper.get_global_state("dave_shop_stock")
 
         item_to_buy = None
         item_index = -1
@@ -1129,32 +1111,55 @@ class ARG(commands.Cog):
             return
 
         price = item_to_buy.get("price", 9999999)
-        if user_data["balance"] < price:
+
+        if profile.balance < price:
             await ctx.send(embed=discord.Embed(title="❌ Insufficient Funds",
                                                description=f"You need **{price:,}** {self.CURRENCY_EMOJI} for this "
-                                                           f"twiddydinky! You only have {user_data['balance']:,}.",
+                                                           f"twiddydinky! You only have {profile.balance:,}.",
                                                color=discord.Color.red()))
             return
 
         item_type = item_to_buy.get("type")
 
         if item_type in ["plant", "seedling"]:
-            first_empty_slot = next((i for i, s in enumerate(user_data["garden"]) if
-                                     self.garden_helper.is_slot_unlocked(user_data, i + 1) and s is None), -1)
+            first_empty_slot = next((i for i, s in enumerate(profile.garden) if
+                                     self.garden_helper.is_slot_unlocked(profile, i + 1) and s is None), -1)
+
+            if first_empty_slot == -1:
+                await ctx.send(embed=discord.Embed(title="❌ Garden Full",
+                                                   description="Dave says: Your garden is full, neighbor! You need to make some space first!",
+                                                   color=discord.Color.red()))
+                return
 
             if item_type == "seedling":
-                await self.garden_helper.plant_seedling(ctx.author.id, first_empty_slot, item_to_buy["id"],
+                self.garden_helper.plant_seedling(ctx.author.id, first_empty_slot, item_to_buy["id"],
                                                         ctx.channel.id)
             else:
                 plant_def = self.plant_helper.get_base_plant_by_id(item_to_buy["id"])
-                await self.garden_helper.set_garden_plot(ctx.author.id, first_empty_slot, plant_def.copy())
+                if not plant_def:
+                    await ctx.send(embed=discord.Embed(title="❌ Plant Definition Missing",
+                                                       description=f"Dave says: I found the item, but my almanac is missing the page for **{item_to_buy['name']}**! This is a bug.",
+                                                       color=discord.Color.red()))
+                    return
+
+                plant_to_add = PlantedPlant(id=plant_def.id, name=plant_def.name, type=plant_def.type)
+                self.garden_helper.set_garden_plot(ctx.author.id, first_empty_slot, plant_to_add)
 
         elif item_type == "material":
-            await self.garden_helper.add_item_to_inventory(ctx.author.id, item_to_buy["id"])
+            self.garden_helper.add_item_to_inventory(ctx.author.id, item_to_buy["id"])
 
-        await self.garden_helper.remove_balance(ctx.author.id, price)
-        self.data["flags"]["dave_shop_stock"][item_index]["stock"] -= 1
-        await self.config.flags.set(self.data["flags"])
+        else:
+            await ctx.send(embed=discord.Embed(title="❌ Unknown Item Type",
+                                               description=f"Dave says: The **{item_to_buy['name']}** is a what now? I'm not sure how to give this to you! (Invalid item type in config).",
+                                               color=discord.Color.red()))
+            return
+
+        current_dave_stock = self.game_state_helper.get_global_state("dave_shop_stock", [])
+
+        if item_index < len(current_dave_stock):
+            current_dave_stock[item_index]["stock"] -= 1
+
+        self.game_state_helper.set_global_state("dave_shop_stock", current_dave_stock)
 
         await ctx.send(embed=discord.Embed(
             title="✅ Purchase Successful!",
@@ -1169,9 +1174,9 @@ class ARG(commands.Cog):
         """Displays the contents of your storage shed or that of another user."""
 
         target_user = user or ctx.author
-        user_data = self.garden_helper.get_user_data(target_user.id)
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
 
-        if not self.garden_helper.user_has_storage_shed(user_data):
+        if not self.garden_helper.user_has_storage_shed(profile):
             user_display = "You do" if target_user == ctx.author else f"User {target_user.mention} does"
             embed = discord.Embed(
                 title="🔒 Storage Shed Inaccessible",
@@ -1183,7 +1188,7 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        display_lines, occupied_slots, capacity = self.garden_helper.get_formatted_storage_contents(user_data)
+        display_lines, occupied_slots, capacity = self.garden_helper.get_formatted_storage_contents(profile)
 
         embed = discord.Embed(
             title=f"📦 {target_user.display_name}'s Storage Shed Inventory",
@@ -1215,9 +1220,9 @@ class ARG(commands.Cog):
     async def store_command(self, ctx: commands.Context, *plot_numbers: int):
         """Moves plants from specified garden plots into your storage shed."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
 
-        if not self.garden_helper.user_has_storage_shed(user_data):
+        if not self.garden_helper.user_has_storage_shed(profile):
             embed = discord.Embed(
                 title="🔒 Storage Shed Inaccessible",
                 description=f"User {ctx.author.mention}, you do not currently possess a Storage Shed. "
@@ -1240,6 +1245,7 @@ class ARG(commands.Cog):
         moved_plants_summary = []
         error_messages = []
 
+        plots_to_actually_store = []
         for plot_num in set(plot_numbers):
             plot_idx_0based = plot_num - 1
 
@@ -1247,17 +1253,20 @@ class ARG(commands.Cog):
                 error_messages.append(f"Plot {plot_num}: Invalid designation (must be 1-12).")
                 continue
 
-            plant = user_data["garden"][plot_idx_0based]
-            if not isinstance(plant, dict) or plant.get("type") == "seedling":
+            plant = profile.garden[plot_idx_0based]
+            if not isinstance(plant, PlantedPlant):
                 error_messages.append(f"Plot {plot_num}: Is empty or contains a non-storable seedling.")
                 continue
 
-            success, message = await self.garden_helper.store_plant(ctx.author.id, plot_idx_0based)
+            plots_to_actually_store.append(plot_idx_0based)
+
+        for plot_idx in plots_to_actually_store:
+            success, message = self.garden_helper.store_plant(ctx.author.id, plot_idx)
 
             if success:
                 moved_plants_summary.append(message)
             else:
-                error_messages.append(f"Plot {plot_num}: Failed to store. Reason: {message}")
+                error_messages.append(f"Plot {plot_idx + 1}: Failed to store. Reason: {message}")
 
         if not moved_plants_summary:
             desc = "No plants were successfully moved to storage."
@@ -1284,9 +1293,9 @@ class ARG(commands.Cog):
     async def unstore_command(self, ctx: commands.Context, *storage_space_numbers: int):
         """Moves plants from specified storage shed slots back into your garden."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
 
-        if not self.garden_helper.user_has_storage_shed(user_data):
+        if not self.garden_helper.user_has_storage_shed(profile):
             embed = discord.Embed(
                 title="🔒 Storage Shed Inaccessible",
                 description=f"User {ctx.author.mention}, you do not currently possess a Storage Shed.",
@@ -1307,25 +1316,32 @@ class ARG(commands.Cog):
 
         retrieved_plants_summary = []
         error_messages = []
-        storage_capacity = self.garden_helper.get_storage_capacity(user_data)
+
+        storage_capacity = self.garden_helper.get_storage_capacity(profile)
+
+        slots_to_unstore = []
 
         for slot_num in set(storage_space_numbers):
             slot_idx_0based = slot_num - 1
 
             if not (0 <= slot_idx_0based < storage_capacity):
-                error_messages.append(f"Storage Slot {slot_num}: Invalid or inaccessible.")
+                error_messages.append(
+                    f"Storage Slot {slot_num}: Invalid or inaccessible (Capacity: {storage_capacity}).")
                 continue
 
-            if user_data["storage_shed_slots"][slot_idx_0based] is None:
+            if profile.storage_shed[slot_idx_0based] is None:
                 error_messages.append(f"Storage Slot {slot_num}: Is empty.")
                 continue
 
-            success, message = await self.garden_helper.unstore_plant(ctx.author.id, slot_idx_0based)
+            slots_to_unstore.append(slot_idx_0based)
+
+        for slot_idx in slots_to_unstore:
+            success, message = self.garden_helper.unstore_plant(ctx.author.id, slot_idx)
 
             if success:
                 retrieved_plants_summary.append(message)
             else:
-                error_messages.append(f"Storage Slot {slot_num}: Failed to retrieve. Reason: {message}")
+                error_messages.append(f"Storage Slot {slot_idx + 1}: Failed to retrieve. Reason: {message}")
 
         if not retrieved_plants_summary:
             desc = "No plants were successfully retrieved from storage."
@@ -1396,40 +1412,49 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        sender_data = self.garden_helper.get_user_data(sender.id)
-        if sender_data["balance"] < money_to_give:
+        sender_profile = self.garden_helper.get_user_profile_view(sender.id)
+        if sender_profile.balance < money_to_give:
             await ctx.send(embed=discord.Embed(title="❌ Insufficient Solar Reserves",
                                                description=f"Your proposal to offer {money_to_give:,} "
-                                                           f"{self.CURRENCY_EMOJI} exceeds your current balance.",
+                                                           f"{self.CURRENCY_EMOJI} exceeds your current balance of {sender_profile.balance:,}.",
                                                color=discord.Color.red()))
             return
 
-        recipient_data = self.garden_helper.get_user_data(recipient.id)
+        recipient_profile = self.garden_helper.get_user_profile_view(recipient.id)
         plants_to_receive_info = []
         for r_slot_idx in want_slots_0_indexed:
-            if not (0 <= r_slot_idx < 12) or not self.garden_helper.is_slot_unlocked(recipient_data, r_slot_idx + 1):
+            if not (0 <= r_slot_idx < 12):
                 await ctx.send(embed=discord.Embed(title="❌ Invalid Target Asset",
-                                                   description=f"Plot {r_slot_idx + 1} is invalid or locked for "
+                                                   description=f"Plot {r_slot_idx + 1} is an invalid plot number.",
+                                                   color=discord.Color.red()))
+                return
+
+            if not self.garden_helper.is_slot_unlocked(recipient_profile, r_slot_idx + 1):
+                await ctx.send(embed=discord.Embed(title="❌ Invalid Target Asset",
+                                                   description=f"Plot {r_slot_idx + 1} is locked for "
                                                                f"{recipient.mention}.",
                                                    color=discord.Color.red()))
                 return
-            plant = recipient_data["garden"][r_slot_idx]
-            if not isinstance(plant, dict) or plant.get("type") == "seedling":
+
+            plant = recipient_profile.garden[r_slot_idx]
+
+            if not isinstance(plant, PlantedPlant):
                 await ctx.send(embed=discord.Embed(title="❌ Invalid Target Asset",
                                                    description=f"The item in {recipient.mention}'s plot "
                                                                f"{r_slot_idx + 1} is not a mature, tradable plant.",
                                                    color=discord.Color.red()))
                 return
-            plants_to_receive_info.append({"r_slot_index": r_slot_idx, "plant_data": plant.copy()})
 
-        free_sender_plots = sum(1 for i, p in enumerate(sender_data["garden"]) if
-                                p is None and self.garden_helper.is_slot_unlocked(sender_data, i + 1))
+            plants_to_receive_info.append({"r_slot_index": r_slot_idx, "plant_data": dataclasses.asdict(plant)})
+
+        free_sender_plots = sum(1 for i, p in enumerate(sender_profile.garden) if
+                                p is None and self.garden_helper.is_slot_unlocked(sender_profile, i + 1))
 
         if free_sender_plots < len(plants_to_receive_info):
             await ctx.send(embed=discord.Embed(title="❌ Insufficient Garden Capacity",
                                                description=f"You need {len(plants_to_receive_info)} empty garden "
-                                                           f"plots to receive these plants, but yo"
-                                                           f"u only have {free_sender_plots}.",
+                                                           f"plot(s) to receive these plants, but you "
+                                                           f"only have {free_sender_plots}.",
                                                color=discord.Color.red()))
             return
 
@@ -1444,6 +1469,7 @@ class ARG(commands.Cog):
 
         plant_names_str = "\n".join(
             [f"    • **{p['plant_data']['name']}** from plot {p['r_slot_index'] + 1}" for p in plants_to_receive_info])
+
         offer_desc = (f"User {sender.mention} has proposed an asset exchange with you.\n\n"
                       f"**Proposal:**\n"
                       f"  ➢ **{sender.display_name}** offers: **{money_to_give:,}** {self.CURRENCY_EMOJI}\n"
@@ -1455,6 +1481,7 @@ class ARG(commands.Cog):
         dm_embed = discord.Embed(title="🛰️ Incoming Asset Exchange Proposal", description=offer_desc,
                                  color=discord.Color.teal())
         dm_embed.set_footer(text=f"Trade Proposal ID: {trade_id}")
+
         try:
             await recipient.send(embed=dm_embed)
             await ctx.send(embed=discord.Embed(title="✅ Proposal Transmitted",
@@ -1528,16 +1555,16 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        sender_data = self.garden_helper.get_user_data(sender.id)
-        if sender_data["balance"] < sun_offered:
+        sender_profile = self.garden_helper.get_user_profile_view(sender.id)
+        if sender_profile.balance < sun_offered:
             await ctx.send(embed=discord.Embed(title="❌ Insufficient Solar Reserves",
                                                description=f"Your proposal to offer {sun_offered:,} "
                                                            f"{self.CURRENCY_EMOJI} exceeds your current balance.",
                                                color=discord.Color.red()))
             return
 
-        recipient_data = self.garden_helper.get_user_data(recipient.id)
-        recipient_inv_counter = Counter(recipient_data.get("inventory", []))
+        recipient_profile = self.garden_helper.get_user_profile_view(recipient.id)
+        recipient_inv_counter = Counter(recipient_profile.inventory)
 
         requested_items_counter = Counter()
         errors = []
@@ -1655,8 +1682,8 @@ class ARG(commands.Cog):
 
         sender_id = trade["sender_id"]
         recipient_id = trade["recipient_id"]
-        sender_data = self.garden_helper.get_user_data(sender_id)
-        recipient_data = self.garden_helper.get_user_data(recipient_id)
+        sender_profile = self.garden_helper.get_user_profile_view(sender_id)
+        recipient_profile = self.garden_helper.get_user_profile_view(recipient_id)
 
         trade_type = trade.get("trade_type", "plant")
         success = False
@@ -1665,18 +1692,18 @@ class ARG(commands.Cog):
 
         if trade_type == "plant":
             sender_unlocked_slots = {i + 1 for i in range(12) if
-                                     self.garden_helper.is_slot_unlocked(sender_data, i + 1)}
+                                     self.garden_helper.is_slot_unlocked(sender_profile, i + 1)}
             success, message, changes = self.trade_helper.execute_plant_trade(
                 trade_data=trade,
-                sender_data=sender_data,
-                recipient_data=recipient_data,
+                sender_profile=sender_profile,
+                recipient_profile=recipient_profile,
                 sender_unlocked_slots=sender_unlocked_slots
             )
         elif trade_type == "item":
             success, message, changes = self.trade_helper.execute_item_trade(
                 trade_data=trade,
-                sender_data=sender_data,
-                recipient_data=recipient_data
+                sender_profile=sender_profile,
+                recipient_profile=recipient_profile
             )
 
         sender = self.bot.get_user(sender_id)
@@ -1684,18 +1711,18 @@ class ARG(commands.Cog):
         if success and changes:
             for update in changes.get("balance_updates", []):
                 if update["amount"] > 0:
-                    await self.garden_helper.add_balance(update["user_id"], update["amount"])
+                    self.garden_helper.add_balance(update["user_id"], update["amount"])
                 else:
-                    await self.garden_helper.remove_balance(update["user_id"], -update["amount"])
+                    self.garden_helper.remove_balance(update["user_id"], -update["amount"])
 
             for move in changes.get("plant_moves", []):
-                await self.garden_helper.set_garden_plot(move["from_user_id"], move["from_plot_idx"], None)
-                await self.garden_helper.set_garden_plot(move["to_user_id"], move["to_plot_idx"], move["plant_data"])
+                self.garden_helper.set_garden_plot(move["from_user_id"], move["from_plot_idx"], None)
+                self.garden_helper.set_garden_plot(move["to_user_id"], move["to_plot_idx"], move["plant_data"])
 
             for transfer in changes.get("item_transfers", []):
-                await self.garden_helper.remove_item_from_inventory(transfer["from_user_id"], transfer["item_id"],
+                self.garden_helper.remove_item_from_inventory(transfer["from_user_id"], transfer["item_id"],
                                                                     transfer["quantity"])
-                await self.garden_helper.add_item_to_inventory(transfer["to_user_id"], transfer["item_id"],
+                self.garden_helper.add_item_to_inventory(transfer["to_user_id"], transfer["item_id"],
                                                                transfer["quantity"])
 
             embed_acceptor = discord.Embed(title="✅ Asset Exchange Confirmed & Executed",
@@ -1789,7 +1816,7 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
 
         first_plot_mentioned = None
         validated_plots_info = []
@@ -1819,10 +1846,10 @@ class ARG(commands.Cog):
 
                 if not (1 <= plot_num <= 12):
                     errors.append(f"Plot {plot_num}: Invalid number.")
-                elif not self.garden_helper.is_slot_unlocked(user_data, plot_num):
+                elif not self.garden_helper.is_slot_unlocked(profile, plot_num):
                     errors.append(f"Plot {plot_num}: Locked.")
                 else:
-                    plant = user_data["garden"][plot_num - 1]
+                    plant = profile.garden[plot_num - 1]
                     if isinstance(plant, dict) and plant.get("type") != "seedling":
                         validated_plots_info.append({"data": plant, "slot_1based": plot_num})
                     else:
@@ -1836,11 +1863,11 @@ class ARG(commands.Cog):
                     errors.append(f"'{cmd_arg}' is not a valid plot number or fusable material.")
 
         for item_id, count in requested_items_counter.items():
-            if Counter(user_data["inventory"]).get(item_id, 0) < count:
+            if Counter(profile.inventory).get(item_id, 0) < count:
                 item_name = self.data_loader.materials_data.get(item_id, item_id)
                 errors.append(
                     f"You need {count}x **{item_name}** but only have "
-                    f"{Counter(user_data['inventory']).get(item_id, 0)}.")
+                    f"{Counter(profile.inventory).get(item_id, 0)}.")
 
         if first_plot_mentioned is None:
             errors.append("Fusion requires at least one plant from a plot to determine the result's location.")
@@ -1883,9 +1910,9 @@ class ARG(commands.Cog):
                                                color=discord.Color.orange()))
             return
 
-        result_plant_name = fusion_result_data.get('name', fusion_result_data['id'])
-        fusion_visibility = fusion_result_data.get("visibility", "visible")
-        is_new = fusion_result_data['id'] not in user_data.get("fusions", []) and fusion_visibility != "invisible"
+        result_plant_name = fusion_result_data.name
+        fusion_visibility = fusion_result_data.visibility
+        is_new = fusion_result_data.id not in profile.discovered_fusions and fusion_visibility != "invisible"
         output_slot = first_plot_mentioned
 
         lock_message = f"Awaiting confirmation to fuse components into a **{result_plant_name}**."
@@ -1920,34 +1947,34 @@ class ARG(commands.Cog):
             self.lock_helper.remove_lock_for_user(ctx.author.id)
 
         for item_id, count in requested_items_counter.items():
-            await self.garden_helper.remove_item_from_inventory(ctx.author.id, item_id, count)
+            self.garden_helper.remove_item_from_inventory(ctx.author.id, item_id, count)
 
         for plot_info in validated_plots_info:
-            await self.garden_helper.set_garden_plot(ctx.author.id, plot_info["slot_1based"] - 1, None)
+            self.garden_helper.set_garden_plot(ctx.author.id, plot_info["slot_1based"] - 1, None)
 
         new_plant = {"id": fusion_result_data["id"], "name": result_plant_name,
                      "type": fusion_result_data.get("type", "unknown")}
-        await self.garden_helper.set_garden_plot(ctx.author.id, output_slot - 1, new_plant)
+        self.garden_helper.set_garden_plot(ctx.author.id, output_slot - 1, new_plant)
 
         bonus_text = ""
         if is_new:
-            await self.garden_helper.add_fusion_discovery(ctx.author.id, fusion_result_data['id'])
+            self.garden_helper.add_fusion_discovery(ctx.author.id, fusion_result_data['id'])
             bonus = int(0.5 * self.sales_helper.get_sale_price(new_plant.get("type", "")))
             if bonus > 0:
-                await self.garden_helper.add_balance(ctx.author.id, bonus)
+                self.garden_helper.add_balance(ctx.author.id, bonus)
                 bonus_text = f"\n\n**New Fusion Discovery!** You've been awarded a bonus of **{bonus:,}** " \
                              f"{self.CURRENCY_EMOJI}!"
 
         unlock_text = ""
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
         if fusion_visibility != "invisible":
             newly_unlocked_bgs = self.background_helper.check_for_unlocks(
-                user_data.get("fusions", []), user_data.get("unlocked_backgrounds", [])
+                profile.discovered_fusions, user_data.get("unlocked_backgrounds", [])
             )
             if newly_unlocked_bgs:
                 unlocked_names = []
                 for bg in newly_unlocked_bgs:
-                    await self.garden_helper.add_unlocked_background(ctx.author.id, bg['id'])
+                    self.garden_helper.add_unlocked_background(ctx.author.id, bg['id'])
                     unlocked_names.append(f"**{bg['name']}**")
                 unlock_text = f"\n\n🎉 **Background Unlocked!** You have unlocked the {', '.join(unlocked_names)} " \
                               f"garden background! Use `{ctx.prefix}background` to manage it."
@@ -1979,8 +2006,8 @@ class ARG(commands.Cog):
         )
 
         if is_list_intent:
-            user_data = self.garden_helper.get_user_data(ctx.author.id)
-            discovered_ids = set(user_data.get("fusions", []))
+            profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+            discovered_ids = set(profile.discovered_fusions)
 
             discovered_fusions_to_display = [f for f in self.fusion_helper.visible_fusions if f['id'] in discovered_ids]
             for fid in discovered_ids:
@@ -2035,8 +2062,8 @@ class ARG(commands.Cog):
     async def almanac_info_command(self, ctx: commands.Context, *, fusion_query: str):
         """Shows detailed info for a specific discovered fusion."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        discovered_ids = set(user_data.get("fusions", []))
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        discovered_ids = set(profile.discovered_fusions)
 
         fusion_def = self.fusion_helper.find_defined_fusion(fusion_query)
 
@@ -2065,11 +2092,11 @@ class ARG(commands.Cog):
                               description=f"Detailed schematics for **{fusion_def['name']}** from your almanac.",
                               color=discord.Color.purple())
         embed.add_field(name="Asset ID", value=f"`{fusion_def['id']}`", inline=True)
-        embed.add_field(name="Classification Tier", value=f"`{fusion_def.get('type', 'N/A')}`", inline=True)
+        embed.add_field(name="Classification Tier", value=f"`{fusion_def.type}`", inline=True)
         embed.add_field(name="Fusion Recipe",
                         value=self.fusion_helper.format_recipe_string(fusion_def.get('recipe', [])), inline=False)
 
-        image_file_to_send = self.image_helper.get_image_file_for_plant(fusion_def.get("id"))
+        image_file_to_send = self.image_helper.get_image_file_for_plant(fusion_def.id)
 
         if image_file_to_send:
             embed.set_image(url=f"attachment://{image_file_to_send.filename}")
@@ -2081,12 +2108,12 @@ class ARG(commands.Cog):
     async def almanac_available_command(self, ctx: commands.Context, *, full_args: str = ""):
         """Lists all fusions you can make right now."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        discovered_ids = set(user_data.get("fusions", []))
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        discovered_ids = set(profile.discovered_fusions)
         parsed_args = self.fusion_helper.parse_almanac_args(full_args)
         filters, page = parsed_args['filters'], parsed_args['page']
 
-        user_assets = self.fusion_helper.get_user_whole_assets_with_source(user_data)
+        user_assets = self.fusion_helper.get_user_whole_assets_with_source(profile)
 
         sorted_user_assets = sorted(
             user_assets,
@@ -2097,13 +2124,13 @@ class ARG(commands.Cog):
         all_craftable_fusions = []
         for fusion_def in self.fusion_helper.visible_fusions:
             plan, _ = self.fusion_helper.find_crafting_plan(
-                recipe_counter=Counter(fusion_def.get("recipe", [])),
+                recipe_counter=Counter(fusion_def.recipe),
                 user_assets=user_assets,
-                fusion_id_to_check=fusion_def.get("id")
+                fusion_id_to_check=fusion_def.id
             )
 
             if plan is not None:
-                recipe_counter = Counter(fusion_def.get("recipe", []))
+                recipe_counter = Counter(fusion_def.recipe)
                 temp_needed = recipe_counter.copy()
                 have_assets_list = []
 
@@ -2170,19 +2197,19 @@ class ARG(commands.Cog):
     async def almanac_discover_command(self, ctx: commands.Context, *, full_args: str = ""):
         """Lists potential discoveries using at least one of your plants or materials."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        discovered_ids = set(user_data.get("fusions", []))
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        discovered_ids = set(profile.discovered_fusions)
         parsed_args = self.fusion_helper.parse_almanac_args(full_args)
         filters, page = parsed_args['filters'], parsed_args['page']
 
-        user_assets = self.fusion_helper.get_user_whole_assets_with_source(user_data)
+        user_assets = self.fusion_helper.get_user_whole_assets_with_source(profile)
         if any(f['key'] == 'storage' and f['value'] == 'false' for f in filters):
             user_assets = [asset for asset in user_assets if asset.get("source") != "storage"]
 
         potential_fusions = []
         material_names = self.fusion_helper.all_materials_by_name
 
-        valid_user_assets = self._get_valid_crafting_components(user_assets)
+        valid_user_assets = self.fusion_helper.get_valid_crafting_components(user_assets)
 
         sorted_user_assets = sorted(
             valid_user_assets,
@@ -2194,12 +2221,12 @@ class ARG(commands.Cog):
             if fusion_def['id'] in discovered_ids:
                 continue
 
-            recipe_counter = Counter(fusion_def.get("recipe", []))
+            recipe_counter = Counter(fusion_def.recipe)
 
             plan, needed = self.fusion_helper.find_crafting_plan(
                 recipe_counter=recipe_counter,
                 user_assets=user_assets,
-                fusion_id_to_check=fusion_def.get('id')
+                fusion_id_to_check=fusion_def.id
             )
 
             fusion_def['plan'] = plan
@@ -2335,9 +2362,9 @@ class ARG(commands.Cog):
     async def background_list_command(self, ctx: commands.Context):
         """Displays all the garden backgrounds you have unlocked."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        unlocked_ids = set(user_data.get("unlocked_backgrounds", ["default"]))
-        active_id = user_data.get("active_background", "default")
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        unlocked_ids = profile.unlocked_backgrounds
+        active_id = profile.active_background
 
         embed = discord.Embed(
             title=f"🖼️ {ctx.author.display_name}'s Unlocked Backgrounds",
@@ -2348,9 +2375,9 @@ class ARG(commands.Cog):
 
         display_lines = []
         for bg_def in self.background_helper.all_backgrounds:
-            if bg_def['id'] in unlocked_ids:
-                is_active = "✅" if bg_def['id'] == active_id else "▫️"
-                display_lines.append(f"{is_active} **{bg_def['name']}**")
+            if bg_def.id in unlocked_ids:
+                is_active = "✅" if bg_def.id == active_id else "▫️"
+                display_lines.append(f"{is_active} **{bg_def.name}**")
 
         embed.add_field(name="Available Backgrounds", value="\n".join(display_lines) or "None unlocked.")
         await ctx.send(embed=embed)
@@ -2359,12 +2386,12 @@ class ARG(commands.Cog):
     async def background_set_command(self, ctx: commands.Context, *, background_name: str):
         """Sets your active garden background."""
 
-        user_data = self.garden_helper.get_user_data(ctx.author.id)
-        unlocked_ids = set(user_data.get("unlocked_backgrounds", ["default"]))
+        profile = self.garden_helper.get_user_profile_view(ctx.author.id)
+        unlocked_ids = profile.unlocked_backgrounds
 
         target_bg = None
         for bg_def in self.background_helper.all_backgrounds:
-            if bg_def['name'].lower() == background_name.lower():
+            if bg_def.name.lower() == background_name.lower():
                 target_bg = bg_def
                 break
 
@@ -2374,18 +2401,18 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        if target_bg['id'] not in unlocked_ids:
+        if target_bg.id not in unlocked_ids:
             await ctx.send(embed=discord.Embed(title="❌ Background Locked",
-                                               description=f"You have not unlocked the **{target_bg['name']}** "
+                                               description=f"You have not unlocked the **{target_bg.name}** "
                                                            f"background yet.",
                                                color=discord.Color.red()))
             return
 
-        await self.garden_helper.set_active_background(ctx.author.id, target_bg['id'])
+        self.garden_helper.set_active_background(ctx.author.id, target_bg.id)
 
         embed = discord.Embed(
             title="✅ Background Set!",
-            description=f"Your active garden background has been set to **{target_bg['name']}**. Your profile will now "
+            description=f"Your active garden background has been set to **{target_bg.name}**. Your profile will now "
                         f"reflect this change.",
             color=discord.Color.green()
         )
@@ -2408,11 +2435,11 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        user_data = self.garden_helper.get_user_data(target_user.id)
-        original_balance = user_data.get("balance", 0)
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
+        original_balance = profile.balance
 
-        await self.garden_helper.set_balance(target_user.id, amount)
-        user_data = self.garden_helper.get_user_data(target_user.id)
+        self.garden_helper.set_balance(target_user.id, amount)
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
 
         embed = discord.Embed(
             title="⚙️ Debug: Solar Energy Set Protocol",
@@ -2422,7 +2449,7 @@ class ARG(commands.Cog):
         embed.add_field(name="Target User", value=target_user.mention, inline=True)
         embed.add_field(name="Set Amount", value=f"{amount:,}", inline=True)
         embed.add_field(name="Original Balance", value=f"{original_balance:,} {self.CURRENCY_EMOJI}", inline=False)
-        embed.add_field(name="New Balance", value=f"{user_data['balance']:,} {self.CURRENCY_EMOJI}", inline=False)
+        embed.add_field(name="New Balance", value=f"{profile.balance:,} {self.CURRENCY_EMOJI}", inline=False)
         embed.set_footer(text="Penny - Administrative Financial Override Systems")
         await ctx.send(embed=embed)
 
@@ -2437,11 +2464,11 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        user_data = self.garden_helper.get_user_data(target_user.id)
-        original_mastery = user_data.get("mastery", 0)
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
+        original_mastery = profile.sun_mastery
 
-        await self.garden_helper.set_sun_mastery(target_user.id, level)
-        user_data = self.garden_helper.get_user_data(target_user.id)
+        self.garden_helper.set_sun_mastery(target_user.id, level)
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
 
         sun_mastery_bonus = 1 + (0.1 * level)
 
@@ -2453,7 +2480,7 @@ class ARG(commands.Cog):
         embed.add_field(name="Target User", value=target_user.mention, inline=True)
         embed.add_field(name="Set Level", value=f"{level}", inline=True)
         embed.add_field(name="Original Sun Mastery", value=f"{original_mastery}", inline=False)
-        embed.add_field(name="New Sun Mastery", value=f"{user_data['mastery']} ({sun_mastery_bonus:.2f}x sell boost)",
+        embed.add_field(name="New Sun Mastery", value=f"{profile.sun_mastery} ({sun_mastery_bonus:.2f}x sell boost)",
                         inline=False)
         embed.set_footer(text="Penny - Administrative Stat Override Systems")
         await ctx.send(embed=embed)
@@ -2469,11 +2496,11 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        user_data = self.garden_helper.get_user_data(target_user.id)
-        original_mastery = user_data.get("time_mastery", 0)
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
+        original_mastery = profile.time_mastery
 
-        await self.garden_helper.set_time_mastery(target_user.id, level)
-        user_data = self.garden_helper.get_user_data(target_user.id)
+        self.garden_helper.set_time_mastery(target_user.id, level)
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
 
         time_mastery_bonus = 1 + (0.1 * level)
 
@@ -2486,7 +2513,7 @@ class ARG(commands.Cog):
         embed.add_field(name="Set Level", value=f"{level}", inline=True)
         embed.add_field(name="Original Time Mastery", value=f"{original_mastery}", inline=False)
         embed.add_field(name="New Time Mastery",
-                        value=f"{user_data['time_mastery']} ({time_mastery_bonus:.2f}x growth boost)", inline=False)
+                        value=f"{profile.time_mastery} ({time_mastery_bonus:.2f}x growth boost)", inline=False)
         embed.set_footer(text="Penny - Administrative Stat Override Systems")
         await ctx.send(embed=embed)
 
@@ -2511,7 +2538,7 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        await self.garden_helper.add_item_to_inventory(target_user.id, actual_item_key, quantity)
+        self.garden_helper.add_item_to_inventory(target_user.id, actual_item_key, quantity)
 
         item_name = item_details.get("name", actual_item_key)
         embed = discord.Embed(
@@ -2527,14 +2554,14 @@ class ARG(commands.Cog):
     async def debug_removeitem_command(self, ctx: commands.Context, target_user: discord.Member, item_id: str):
         """Removes one instance of an item from a user's inventory."""
 
-        user_data = self.garden_helper.get_user_data(target_user.id)
-        inventory = user_data.get("inventory", [])
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
+        inventory = profile.inventory
 
         item_id_lower = item_id.lower()
         actual_item_key = next((k for k in inventory if k.lower() == item_id_lower), None)
 
         if actual_item_key:
-            await self.garden_helper.remove_item_from_inventory(target_user.id, actual_item_key)
+            self.garden_helper.remove_item_from_inventory(target_user.id, actual_item_key)
 
             all_items = self.shop_helper.get_all_item_definitions()
             item_name = all_items.get(actual_item_key, {}).get("name", actual_item_key)
@@ -2575,8 +2602,7 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        user_data = self.garden_helper.get_user_data(target_user.id)
-        garden = user_data["garden"]
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
         plot_index = plot_number - 1
 
         if not (0 <= plot_index < 12):
@@ -2584,24 +2610,32 @@ class ARG(commands.Cog):
                 embed=discord.Embed(title="❌ Invalid Plot", description="Plot number must be between 1 and 12.",
                                     color=discord.Color.red()))
             return
-        if not self.garden_helper.is_slot_unlocked(user_data, plot_number):
+
+        if not self.garden_helper.is_slot_unlocked(profile, plot_number):
             await ctx.send(embed=discord.Embed(title="❌ Plot Locked",
                                                description=f"Plot {plot_number} is locked for user "
                                                            f"{target_user.mention}.",
                                                color=discord.Color.red()))
             return
-        if garden[plot_index] is not None:
+
+        if profile.garden[plot_index] is not None:
             await ctx.send(embed=discord.Embed(title="❌ Plot Occupied",
                                                description=f"Plot {plot_number} for user {target_user.mention} is "
                                                            f"already occupied.",
                                                color=discord.Color.red()))
             return
 
-        await self.garden_helper.set_garden_plot(target_user.id, plot_index, plant_definition.copy())
+        new_plant = PlantedPlant(
+            id=plant_definition.id,
+            name=plant_definition.name,
+            type=plant_definition.type
+        )
+
+        self.garden_helper.set_garden_plot(target_user.id, plot_index, new_plant)
 
         embed = discord.Embed(
             title="⚙️ Debug: Base Plant Added",
-            description=f"Successfully added **{plant_definition.get('name', plant_id)}** to plot {plot_number} for "
+            description=f"Successfully added **{new_plant.name}** to plot {plot_number} for "
                         f"{target_user.mention}.",
             color=discord.Color.green()
         )
@@ -2612,6 +2646,7 @@ class ARG(commands.Cog):
     async def debug_addplant_fusion(self, ctx: commands.Context, target_user: discord.Member, plot_number: int, *,
                                     fusion_id: str):
         """Adds a specific fusion plant to a user's garden plot."""
+
         fusion_definition = self.fusion_helper.find_defined_fusion(fusion_id)
         if not fusion_definition:
             await ctx.send(embed=discord.Embed(title="❌ Fusion Not Found",
@@ -2620,8 +2655,7 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        user_data = self.garden_helper.get_user_data(target_user.id)
-        garden = user_data["garden"]
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
         plot_index = plot_number - 1
 
         if not (0 <= plot_index < 12):
@@ -2629,29 +2663,31 @@ class ARG(commands.Cog):
                 embed=discord.Embed(title="❌ Invalid Plot", description="Plot number must be between 1 and 12.",
                                     color=discord.Color.red()))
             return
-        if not self.garden_helper.is_slot_unlocked(user_data, plot_number):
+
+        if not self.garden_helper.is_slot_unlocked(profile, plot_number):
             await ctx.send(embed=discord.Embed(title="❌ Plot Locked",
                                                description=f"Plot {plot_number} is locked for user "
                                                            f"{target_user.mention}.",
                                                color=discord.Color.red()))
             return
-        if garden[plot_index] is not None:
+
+        if profile.garden[plot_index] is not None:
             await ctx.send(embed=discord.Embed(title="❌ Plot Occupied",
                                                description=f"Plot {plot_number} for user {target_user.mention} is "
                                                            f"already occupied.",
                                                color=discord.Color.red()))
             return
 
-        plant_to_add = {
-            "id": fusion_definition.get("id"),
-            "name": fusion_definition.get("name", fusion_id),
-            "type": fusion_definition.get("type", "unknown_fusion")
-        }
-        await self.garden_helper.set_garden_plot(target_user.id, plot_index, plant_to_add)
+        new_plant = PlantedPlant(
+            id=fusion_definition.id,
+            name=fusion_definition.name,
+            type=fusion_definition.type
+        )
+        self.garden_helper.set_garden_plot(target_user.id, plot_index, new_plant)
 
         embed = discord.Embed(
             title="⚙️ Debug: Fusion Plant Added",
-            description=f"Successfully added **{plant_to_add.get('name')}** to plot {plot_number} for "
+            description=f"Successfully added **{new_plant.name}** to plot {plot_number} for "
                         f"{target_user.mention}.",
             color=discord.Color.green()
         )
@@ -2662,10 +2698,12 @@ class ARG(commands.Cog):
     async def debug_addplant_custom(self, ctx: commands.Context, target_user: discord.Member, plot_number: int, *,
                                     custom_plant_dict_str: str):
         """Adds a custom plant object (from dict) to a user's garden."""
+
         try:
             custom_plant_obj = json.loads(custom_plant_dict_str)
             if not isinstance(custom_plant_obj, dict):
                 raise ValueError("Input must be a valid JSON dictionary.")
+
             if not all(k in custom_plant_obj for k in ["id", "name", "type"]):
                 await ctx.send(embed=discord.Embed(title="❌ Invalid Dictionary",
                                                    description="The provided dictionary string is missing one or more "
@@ -2682,8 +2720,7 @@ class ARG(commands.Cog):
             await ctx.send(embed=discord.Embed(title="❌ Value Error", description=str(e), color=discord.Color.red()))
             return
 
-        user_data = self.garden_helper.get_user_data(target_user.id)
-        garden = user_data["garden"]
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
         plot_index = plot_number - 1
 
         if not (0 <= plot_index < 12):
@@ -2691,24 +2728,34 @@ class ARG(commands.Cog):
                 embed=discord.Embed(title="❌ Invalid Plot", description="Plot number must be between 1 and 12.",
                                     color=discord.Color.red()))
             return
-        if not self.garden_helper.is_slot_unlocked(user_data, plot_number):
+
+        if not self.garden_helper.is_slot_unlocked(profile, plot_number):
             await ctx.send(embed=discord.Embed(title="❌ Plot Locked",
                                                description=f"Plot {plot_number} is locked for user "
                                                            f"{target_user.mention}.",
                                                color=discord.Color.red()))
             return
-        if garden[plot_index] is not None:
+
+        if profile.garden[plot_index] is not None:
             await ctx.send(embed=discord.Embed(title="❌ Plot Occupied",
                                                description=f"Plot {plot_number} for user {target_user.mention} is "
                                                            f"already occupied.",
                                                color=discord.Color.red()))
             return
 
-        await self.garden_helper.set_garden_plot(target_user.id, plot_index, custom_plant_obj)
+        try:
+            custom_plant_to_add = PlantedPlant(**custom_plant_obj)
+        except TypeError:
+            await ctx.send(embed=discord.Embed(title="❌ Dictionary Mismatch",
+                                               description="The keys in the provided dictionary do not match the required fields for a plant.",
+                                               color=discord.Color.red()))
+            return
+
+        self.garden_helper.set_garden_plot(target_user.id, plot_index, custom_plant_to_add)
 
         embed = discord.Embed(
             title="⚙️ Debug: Custom Plant Added",
-            description=f"Successfully added custom plant **{custom_plant_obj.get('name')}** to plot {plot_number} "
+            description=f"Successfully added custom plant **{custom_plant_to_add.name}** to plot {plot_number} "
                         f"for {target_user.mention}.",
             color=discord.Color.green()
         )
@@ -2719,7 +2766,8 @@ class ARG(commands.Cog):
     @cmd_debug_group.command(name="speed")
     async def debug_speed_command(self, ctx: commands.Context, minutes: Optional[int] = None):
         """Sets or displays the global plant growth duration in minutes."""
-        current_duration = self.data["flags"].get("plant_growth_duration_minutes", 240)
+
+        current_duration = self.game_state_helper.get_global_state("plant_growth_duration_minutes")
 
         if minutes is None:
             embed = discord.Embed(
@@ -2752,8 +2800,9 @@ class ARG(commands.Cog):
     @cmd_debug_group.command(name="replenishstock")
     async def debug_replenishstock_command(self, ctx: commands.Context, item_id: str, amount: int = 1):
         """Adds stock to a limited item in Rux's shop."""
+
         item_details = self.data_loader.rux_shop_data.get(item_id)
-        if not item_details or item_details.get("category") != "limited":
+        if not item_details or item_details.category != "limited":
             embed = discord.Embed(title="❌ Invalid Item",
                                   description=f"'{item_id}' is not a valid, limited-stock item in rux_shop.json.",
                                   color=discord.Color.red())
@@ -2774,7 +2823,7 @@ class ARG(commands.Cog):
 
         embed = discord.Embed(
             title="⚙️ Debug: Stock Replenishment Protocol",
-            description=f"Successfully replenished stock for **{item_details.get('name', item_id)}** (`{item_id}`).",
+            description=f"Successfully replenished stock for **{item_details.name}** (`{item_id}`).",
             color=discord.Color.green()
         )
         embed.add_field(name="Amount Added", value=f"+{amount}", inline=True)
@@ -2786,6 +2835,7 @@ class ARG(commands.Cog):
     @cmd_debug_group.command(name="refreshpennyshop")
     async def debug_refreshpennyshop_command(self, ctx: commands.Context):
         """Forces an immediate refresh of Penny's Treasures shop stock."""
+
         await ctx.send(embed=discord.Embed(title="⚙️ Debug: Penny's Shop Refresh",
                                            description="Forcing an immediate refresh of Penny's Treasures stock...",
                                            color=discord.Color.orange()))
@@ -2802,6 +2852,7 @@ class ARG(commands.Cog):
     @cmd_debug_group.command(name="pennyshoprefresh")
     async def debug_pennyshoprefresh_command(self, ctx: commands.Context, interval_hours: Optional[int] = None):
         """Sets or displays the Penny's Shop refresh interval in hours."""
+
         current_interval = self.data["flags"].get("treasure_shop_refresh_interval_hours", 1)
 
         if interval_hours is None:
@@ -2839,6 +2890,7 @@ class ARG(commands.Cog):
     @cmd_debug_group.command(name="refreshdaveshop")
     async def debug_refreshdaveshop_command(self, ctx: commands.Context):
         """Forces an immediate refresh of Crazy Dave's shop stock."""
+
         await ctx.send(embed=discord.Embed(title="⚙️ Debug: Dave's Shop Refresh",
                                            description="Forcing an immediate refresh of Crazy Dave's Twiddydinkies "
                                                        "stock...",
@@ -2858,7 +2910,7 @@ class ARG(commands.Cog):
 
         target_bg_def = None
         for bg_def in self.background_helper.all_backgrounds:
-            if bg_def['name'].lower() == background_name.lower():
+            if bg_def.name.lower() == background_name.lower():
                 target_bg_def = bg_def
                 break
 
@@ -2870,24 +2922,24 @@ class ARG(commands.Cog):
             ))
             return
 
-        user_data = self.garden_helper.get_user_data(target_user.id)
-        unlocked_bgs = user_data.get("unlocked_backgrounds", ["default"])
-        bg_id_to_unlock = target_bg_def['id']
+        profile = self.garden_helper.get_user_profile_view(target_user.id)
+        unlocked_bgs = profile.unlocked_backgrounds
+        bg_id_to_unlock = target_bg_def.id
 
         if bg_id_to_unlock in unlocked_bgs:
             await ctx.send(embed=discord.Embed(
                 title="⚙️ Debug: Background Already Unlocked",
-                description=f"User {target_user.mention} already has the **{target_bg_def['name']}** background "
+                description=f"User {target_user.mention} already has the **{target_bg_def.name}** background "
                             f"unlocked.",
                 color=discord.Color.blue()
             ))
             return
 
-        await self.garden_helper.add_unlocked_background(target_user.id, bg_id_to_unlock)
+        self.garden_helper.add_unlocked_background(target_user.id, bg_id_to_unlock)
 
         embed = discord.Embed(
             title="✅ Debug: Background Unlocked",
-            description=f"Successfully unlocked the **{target_bg_def['name']}** background for {target_user.mention}.",
+            description=f"Successfully unlocked the **{target_bg_def.name}** background for {target_user.mention}.",
             color=discord.Color.green()
         )
         embed.set_footer(text="Penny - Administrative Override Systems")

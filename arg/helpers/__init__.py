@@ -10,3 +10,4 @@ from .fusion_helper import FusionHelper
 from .trade_helper import TradeHelper
 from .shop_helper import ShopHelper
 from .background_helper import BackgroundHelper
+from .game_state_helper import GameStateHelper

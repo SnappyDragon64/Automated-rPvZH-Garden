@@ -1,5 +1,7 @@
 from typing import Any, Dict, Tuple
 
+from ..models import UserProfileView, PlantedPlant
+
 
 class SalesHelper:
     """A helper class for managing the sale prices and processing of plant sales."""
@@ -19,11 +21,12 @@ class SalesHelper:
         if not self.SALES_PRICES:
             print("CRITICAL ERROR: SALES_PRICES is empty in get_sale_price. Returning 0.")
             return 0
-
         return self.SALES_PRICES.get(plant_type, 0)
 
-    def process_sales(self, user_data: Dict[str, Any], slots_to_sell_from: Tuple[int, ...]) -> Dict[str, Any]:
-        """Processes the sale of plants from specified plots, calculating earnings and mastery."""
+    def process_sales(self, profile: UserProfileView, slots_to_sell_from: Tuple[int, ...]) -> Dict[str, Any]:
+        """
+        Processes the sale of plants from specified plots, calculating earnings and mastery.
+        """
 
         results = {
             "total_earnings": 0,
@@ -40,20 +43,23 @@ class SalesHelper:
                 results["error_messages"].append(f"Plot {slot_num_1based}: Invalid designation (must be 1-12).")
                 continue
 
-            plant_to_sell = user_data["garden"][plot_idx_0based]
-            if not isinstance(plant_to_sell, dict) or plant_to_sell.get("type") == "seedling":
+            plant_to_sell = profile.garden[plot_idx_0based]
+
+            if not isinstance(plant_to_sell, PlantedPlant):
                 results["error_messages"].append(
-                    f"Plot {slot_num_1based}: Is empty or contains a non-sellable seedling.")
+                    f"Plot {slot_num_1based}: Is empty or contains a non-sellable seedling."
+                )
                 continue
 
-            plant_name = plant_to_sell.get("name", "Unknown Asset")
-            plant_type = plant_to_sell.get("type", "base_plant")
+            plant_name = plant_to_sell.name
+            plant_type = plant_to_sell.type
 
             if plant_type == "tier∞":
                 results["mastery_gained"] += 1
                 results["sold_plants_details"].append(
                     f"**{plant_name}** from plot {slot_num_1based} has transcended reality, increasing your Sun "
-                    f"Mastery!")
+                    f"Mastery!"
+                )
                 results["plots_to_clear"].append(plot_idx_0based)
                 continue
 
@@ -61,7 +67,8 @@ class SalesHelper:
                 results["time_mastery_gained"] += 1
                 results["sold_plants_details"].append(
                     f"**{plant_name}** from plot {slot_num_1based} has transcended reality, increasing your Time "
-                    f"Mastery!")
+                    f"Mastery!"
+                )
                 results["plots_to_clear"].append(plot_idx_0based)
                 continue
 
@@ -70,14 +77,15 @@ class SalesHelper:
                 results["error_messages"].append(f"Plot {slot_num_1based}: Asset '{plant_name}' has no market value.")
                 continue
 
-            sun_mastery_bonus = 1 + (0.1 * user_data.get("mastery", 0))
+            sun_mastery_bonus = 1 + (0.1 * profile.sun_mastery)
             final_sale_price = int(sale_price * sun_mastery_bonus)
             results["total_earnings"] += final_sale_price
 
             bonus_text = f" (Boosted by {sun_mastery_bonus:.2f}x)" if sun_mastery_bonus > 1 else ""
             results["sold_plants_details"].append(
                 f"**{plant_name}** from plot {slot_num_1based} (Yield: +{final_sale_price:,} "
-                f"{self.CURRENCY_EMOJI}){bonus_text}")
+                f"{self.CURRENCY_EMOJI}){bonus_text}"
+            )
             results["plots_to_clear"].append(plot_idx_0based)
 
         return results

@@ -12,3 +12,16 @@ from .user_data import (
     UserProfile,
     UserProfileView,
 )
+
+__all__ = [
+    "BasePlant",
+    "SeedlingDefinition",                       
+    "FusionRecipe",
+    "Background",
+    "ShopItemDefinition",
+    "PlantedSeedling",
+    "PlantedPlant",
+    "SlotItem",
+    "UserProfile",
+    "UserProfileView",
+]

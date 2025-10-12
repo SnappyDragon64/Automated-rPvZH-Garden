@@ -2510,9 +2510,10 @@
     "id": "Endoflame",
     "recipe": [
       "Sunflower",
-      "Torchwood"
+      "Torchwood",
+      "Fertilizer"
     ],
-    "type": "tier2"
+    "type": "tier3"
   },
   {
     "id": "Swordmaster Starfruit",
@@ -2979,7 +2980,7 @@
     "type": "tier2"
   },
   {
-    "id": "Totem-nut",
+    "id": "Threepea-nut",
     "recipe": [
       "Wall-nut",
       "Threepeater"
@@ -3694,5 +3695,265 @@
       "Snow Lotus"
     ],
     "type": "tier5"
+  },
+  {
+    "id": "Brood-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Fertilizer",
+      "Puff-shroom",
+      "Puff-shroom",
+      "Jicamagicker"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Artemis Cabbage",
+    "recipe": [
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean",
+      "Cabbage-pult",
+      "Sunflower",
+      "Plantern"
+    ],
+    "type": "tier6"
+  },
+  {
+    "id": "Blood Moon Cabbage",
+    "recipe": [
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean",
+      "Cabbage-pult",
+      "Sunflower",
+      "Plantern",
+      "Doom-shroom"
+    ],
+    "type": "tier7"
+  },
+  {
+    "id": "Princess Solarnova",
+    "recipe": [
+      "Golden Bean",
+      "Marigold",
+      "Sunflower",
+      "Sunflower",
+      "Torchwood"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Firefly-shroom",
+    "recipe": [
+      "Sunflower",
+      "Puff-shroom",
+      "Plantern"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Ascendant Firefly-shroom",
+    "recipe": [
+      "Sunflower",
+      "Puff-shroom",
+      "Plantern",
+      "Fertilizer"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Radiant Firefly-shroom",
+    "recipe": [
+      "Sunflower",
+      "Puff-shroom",
+      "Plantern",
+      "Fertilizer",
+      "Fertilizer"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Football Gatling",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Football Helmet"
+    ],
+    "type": "tier5"
+  },
+  {
+    "id": "Shooter-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Peashooter"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Puffer-shroom",
+    "recipe": [
+      "Sea-shroom",
+      "Ice-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Whale-shroom",
+    "recipe": [
+      "Sea-shroom",
+      "Doom-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Jelly-shroom",
+    "recipe": [
+      "Sea-shroom",
+      "Hypno-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sunfruit",
+    "recipe": [
+      "Starfruit",
+      "Sunflower"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sun Pepper",
+    "recipe": [
+      "Sunflower",
+      "Jalapeno"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Treasure Mine",
+    "recipe": [
+      "Potato Mine",
+      "Marigold"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Sardine-shroom",
+    "recipe": [
+      "Sea-shroom",
+      "Puff-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Nutty-shroom",
+    "recipe": [
+      "Wall-nut",
+      "Scaredy-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Glow-nut",
+    "recipe": [
+      "Plantern",
+      "Wall-nut"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Nut Pot",
+    "recipe": [
+      "Wall-nut",
+      "Flower Pot"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Nut Pad",
+    "recipe": [
+      "Wall-nut",
+      "Lily Pad"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Kelp-nut",
+    "recipe": [
+      "Wall-nut",
+      "Tangle Kelp"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Melon Lure",
+    "recipe": [
+      "Melon-pult",
+      "Magnet-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Iron Melon",
+    "recipe": [
+      "Melon-pult",
+      "Magnet-shroom",
+      "Bucket"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Chrono Melon",
+    "recipe": [
+      "Melon-pult",
+      "Magnet-shroom",
+      "Space Debris"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Doom Pepper",
+    "recipe": [
+      "Jalapeno",
+      "Doom-shroom"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Reaper Chomper",
+    "recipe": [
+      "Chomper",
+      "Doom-shroom",
+      "Doom-shroom",
+      "Jalapeno"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Lucky Blover",
+    "recipe": [
+      "Blover",
+      "Fertilizer"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Pumpkin Patch",
+    "recipe": [
+      "Peashooter",
+      "Pumpkin"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Torchflower",
+    "recipe": [
+      "Sunflower",
+      "Torchwood"
+    ],
+    "type": "tier2"
   }
 ]

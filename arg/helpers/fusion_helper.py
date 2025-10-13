@@ -3,7 +3,7 @@ import re
 from collections import Counter
 from typing import Any, Dict, List, Optional, Tuple
 
-from models import PlantedSeedling, UserProfileView
+from ..models import PlantedSeedling, UserProfileView
 from ..models import FusionRecipe
 from .plant_helper import PlantHelper
 

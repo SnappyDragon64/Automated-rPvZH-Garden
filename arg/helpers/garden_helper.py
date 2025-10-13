@@ -42,7 +42,7 @@ class GardenHelper:
     def _deserialize_user(self, user_id: int, user_dict: Dict[str, Any]) -> UserProfile:
         defaults = {
             "balance": 0, "garden": [None] * 12, "inventory": [], "last_daily": None,
-            "fusions": [], "storage_shed_slots": [None] * 8, "mastery": 0,
+            "discovered_fusions": [], "storage_shed_slots": [None] * 8, "mastery": 0,
             "time_mastery": 0, "unlocked_backgrounds": ["default"], "active_background": "default"
         }
 
@@ -59,7 +59,7 @@ class GardenHelper:
             garden=[self._dict_to_slot_item(p) for p in user_dict["garden"]],
             storage_shed=[self._dict_to_slot_item(p) for p in user_dict["storage_shed_slots"]],
             inventory=user_dict["inventory"],
-            discovered_fusions=user_dict["fusions"],
+            discovered_fusions=user_dict["discovered_fusions"],
             unlocked_backgrounds=user_dict["unlocked_backgrounds"],
         )
 
@@ -311,7 +311,8 @@ class GardenHelper:
         self._save_user_profile(profile)
 
     def get_sorted_leaderboard(self) -> List[Dict[str, Any]]:
-        profiles = [self._get_or_create_user_profile(int(uid)) for uid in self._raw_user_data.keys()]
+        all_user_ids = self.get_all_user_ids()
+        profiles = [self._get_or_create_user_profile(uid) for uid in all_user_ids]
         users = [{"user_id": p.user_id, "balance": p.balance} for p in profiles]
         return sorted(users, key=lambda u: u["balance"], reverse=True)
 

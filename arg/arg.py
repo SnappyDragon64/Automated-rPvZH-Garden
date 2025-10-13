@@ -10,8 +10,8 @@ from typing import Optional, List
 import discord
 from redbot.core import Config, commands, data_manager
 
-from decorators import is_cog_ready, is_not_locked
-from helpers import (
+from .decorators import is_cog_ready, is_not_locked
+from .helpers import (
     TimeHelper,
     PlantHelper,
     SalesHelper,
@@ -27,14 +27,15 @@ from helpers import (
     GameStateHelper,
     PIL_AVAILABLE,
 )
-from models import PlantedSeedling, PlantedPlant, ShopItemDefinition
+from .models import PlantedSeedling, PlantedPlant, ShopItemDefinition
 
 
 class ARG(commands.Cog):
     """Penny's Zen Garden Interface - Assist users in managing their Zen Gardens."""
 
     CURRENCY_EMOJI = "<:Sun:286219730296242186>"
-    DISCORD_LOG_CHANNEL_ID = 1379054870312779917
+    DISCORD_LOG_CHANNEL_ID = 1386642972539621487
+    # 1379054870312779917
     _DISPLAY_TEXT_GARDEN_IN_PROFILE: bool = False
 
     def __init__(self, bot: commands.Bot):
@@ -303,10 +304,17 @@ class ARG(commands.Cog):
 
             for item_id, count in sorted(inventory_counts.items()):
                 item_info = all_item_defs.get(item_id)
-                if item_info and item_info.get("category") == "upgrade":
+                
+                if isinstance(item_info, ShopItemDefinition) and item_info.category == "upgrade":
                     continue
-
-                item_name = item_info.get("name", item_id) if item_info else item_id
+                
+                item_name = ""
+                if isinstance(item_info, ShopItemDefinition):
+                    item_name = item_info.name
+                elif isinstance(item_info, dict):
+                    item_name = item_info.get("name", item_id)
+                
+                item_name = item_name or item_id
                 inventory_display.append(f"**{item_name}** (`{item_id}`)" + (f" x{count}" if count > 1 else ""))
 
             if inventory_display:
@@ -807,7 +815,7 @@ class ARG(commands.Cog):
 
         eligible_items_for_display = []
         sorted_shop_items = sorted(self.data_loader.rux_shop_data.items(),
-                                   key=lambda item: (item[1].get("category", "zzz"), item[1].get("cost", 0)))
+                                   key=lambda item: (item[1].category or "zzz", item[1].cost or 0))
 
         for item_id, item_details in sorted_shop_items:
             if not isinstance(item_details, ShopItemDefinition):
@@ -841,9 +849,9 @@ class ARG(commands.Cog):
 
             shop_content_parts = []
             for item_id, details in page_items:
-                name = details.get("name", item_id)
-                cost = details.get("cost", 0)
-                description = details.get("description", "No description available.")
+                name = details.name or item_id
+                cost = details.cost or 0
+                description = details.description or "No description available."
 
                 item_entry = f"**{name}** (`{item_id}`)\nCost: **{cost:,}** {self.CURRENCY_EMOJI}"
 
@@ -914,8 +922,8 @@ class ARG(commands.Cog):
 
         missing_reqs = [req for req in item_details.requirements if req not in profile.inventory]
         if missing_reqs:
-            missing_reqs_names = [f"`{self.data_loader.rux_shop_data.get(req, {}).get('name', req)}`" for req in
-                                  missing_reqs]
+            missing_reqs_names = [f"`{req}`" for req in missing_reqs]
+
             embed = discord.Embed(title="❌ Prerequisites Not Met",
                                   description=f"Rux says: You can't buy the **{item_name}** yet. You need to get these "
                                               f"first: {', '.join(missing_reqs_names)}.",
@@ -1130,22 +1138,38 @@ class ARG(commands.Cog):
                                                    description="Dave says: Your garden is full, neighbor! You need to make some space first!",
                                                    color=discord.Color.red()))
                 return
-
-            if item_type == "seedling":
-                self.garden_helper.plant_seedling(ctx.author.id, first_empty_slot, item_to_buy["id"],
-                                                        ctx.channel.id)
-            else:
+            
+            if item_type == "plant":
                 plant_def = self.plant_helper.get_base_plant_by_id(item_to_buy["id"])
                 if not plant_def:
                     await ctx.send(embed=discord.Embed(title="❌ Plant Definition Missing",
                                                        description=f"Dave says: I found the item, but my almanac is missing the page for **{item_to_buy['name']}**! This is a bug.",
                                                        color=discord.Color.red()))
-                    return
-
+                    return 
+                
+                self.garden_helper.remove_balance(ctx.author.id, price)
                 plant_to_add = PlantedPlant(id=plant_def.id, name=plant_def.name, type=plant_def.type)
                 self.garden_helper.set_garden_plot(ctx.author.id, first_empty_slot, plant_to_add)
 
+            elif item_type == "seedling":
+                seedling_def = self.plant_helper.get_seedling_by_id(item_to_buy["id"])
+                if not seedling_def:
+                    await ctx.send(embed=discord.Embed(title="❌ Seedling Definition Missing",
+                                                       description=f"Dave says: I found the item, but I forgot what kind of seed it is! This is a bug.",
+                                                       color=discord.Color.red()))
+                    return
+                
+                self.garden_helper.remove_balance(ctx.author.id, price)
+                self.garden_helper.plant_seedling(ctx.author.id, first_empty_slot, item_to_buy["id"], ctx.channel.id)
+
         elif item_type == "material":
+            if item_to_buy["id"] not in self.data_loader.materials_data:
+                await ctx.send(embed=discord.Embed(title="❌ Material Definition Missing",
+                                                   description=f"Dave says: I found something shiny, but I don't know what it is! This is a bug.",
+                                                   color=discord.Color.red()))
+                return
+            
+            self.garden_helper.remove_balance(ctx.author.id, price)
             self.garden_helper.add_item_to_inventory(ctx.author.id, item_to_buy["id"])
 
         else:
@@ -1850,7 +1874,7 @@ class ARG(commands.Cog):
                     errors.append(f"Plot {plot_num}: Locked.")
                 else:
                     plant = profile.garden[plot_num - 1]
-                    if isinstance(plant, dict) and plant.get("type") != "seedling":
+                    if isinstance(plant, PlantedPlant):
                         validated_plots_info.append({"data": plant, "slot_1based": plot_num})
                     else:
                         errors.append(f"Plot {plot_num}: Is empty or has a non-fusable seedling.")
@@ -1882,7 +1906,7 @@ class ARG(commands.Cog):
         base_components = []
         deconstruction_errors = []
         for plot_info in validated_plots_info:
-            components, errors = self.fusion_helper.deconstruct_plant(plot_info["data"])
+            components, errors = self.fusion_helper.deconstruct_plant(dataclasses.asdict(plot_info["data"]))
             base_components.extend(components)
             deconstruction_errors.extend(errors)
 
@@ -1898,7 +1922,7 @@ class ARG(commands.Cog):
 
         fusion_result_data = self.fusion_helper.find_fusion_match(base_components)
 
-        consumed_list_str = [f"**{p['data']['name']}** (Plot {p['slot_1based']})" for p in validated_plots_info]
+        consumed_list_str = [f"**{p['data'].name}** (Plot {p['slot_1based']})" for p in validated_plots_info]
         consumed_list_str.extend(
             [f"**{self.data_loader.materials_data.get(item_id, item_id)}** x{count}" for item_id, count in
              requested_items_counter.items()])
@@ -1952,14 +1976,13 @@ class ARG(commands.Cog):
         for plot_info in validated_plots_info:
             self.garden_helper.set_garden_plot(ctx.author.id, plot_info["slot_1based"] - 1, None)
 
-        new_plant = {"id": fusion_result_data["id"], "name": result_plant_name,
-                     "type": fusion_result_data.get("type", "unknown")}
+        new_plant = PlantedPlant(id = fusion_result_data.id, name = result_plant_name, type = fusion_result_data.type)
         self.garden_helper.set_garden_plot(ctx.author.id, output_slot - 1, new_plant)
 
         bonus_text = ""
         if is_new:
-            self.garden_helper.add_fusion_discovery(ctx.author.id, fusion_result_data['id'])
-            bonus = int(0.5 * self.sales_helper.get_sale_price(new_plant.get("type", "")))
+            self.garden_helper.add_fusion_discovery(ctx.author.id, fusion_result_data.id)
+            bonus = int(0.5 * self.sales_helper.get_sale_price(new_plant.type))
             if bonus > 0:
                 self.garden_helper.add_balance(ctx.author.id, bonus)
                 bonus_text = f"\n\n**New Fusion Discovery!** You've been awarded a bonus of **{bonus:,}** " \
@@ -1969,13 +1992,13 @@ class ARG(commands.Cog):
         profile = self.garden_helper.get_user_profile_view(ctx.author.id)
         if fusion_visibility != "invisible":
             newly_unlocked_bgs = self.background_helper.check_for_unlocks(
-                profile.discovered_fusions, user_data.get("unlocked_backgrounds", [])
+                profile.discovered_fusions, profile.unlocked_backgrounds
             )
             if newly_unlocked_bgs:
                 unlocked_names = []
                 for bg in newly_unlocked_bgs:
-                    self.garden_helper.add_unlocked_background(ctx.author.id, bg['id'])
-                    unlocked_names.append(f"**{bg['name']}**")
+                    self.garden_helper.add_unlocked_background(ctx.author.id, bg.id)
+                    unlocked_names.append(f"**{bg.name}**")
                 unlock_text = f"\n\n🎉 **Background Unlocked!** You have unlocked the {', '.join(unlocked_names)} " \
                               f"garden background! Use `{ctx.prefix}background` to manage it."
 
@@ -1985,7 +2008,7 @@ class ARG(commands.Cog):
                                       color=discord.Color.green())
         success_embed.set_footer(text="Penny - Fusion Systems Interface")
 
-        image_file_to_send = self.image_helper.get_image_file_for_plant(fusion_result_data.get("id"))
+        image_file_to_send = self.image_helper.get_image_file_for_plant(fusion_result_data.id)
         if image_file_to_send:
             success_embed.set_image(url=f"attachment://{image_file_to_send.filename}")
 
@@ -2009,7 +2032,7 @@ class ARG(commands.Cog):
             profile = self.garden_helper.get_user_profile_view(ctx.author.id)
             discovered_ids = set(profile.discovered_fusions)
 
-            discovered_fusions_to_display = [f for f in self.fusion_helper.visible_fusions if f['id'] in discovered_ids]
+            discovered_fusions_to_display = [f for f in self.fusion_helper.visible_fusions if f.id in discovered_ids]
             for fid in discovered_ids:
                 if hidden_fusion := self.fusion_helper.hidden_fusions_by_id.get(fid):
                     discovered_fusions_to_display.append(hidden_fusion)
@@ -2038,7 +2061,7 @@ class ARG(commands.Cog):
             items_per_page = 10
             total_pages = max(1, (len(filtered_fusions) + items_per_page - 1) // items_per_page)
             page = max(1, min(page, total_pages))
-            page_entries = sorted(filtered_fusions, key=lambda x: x['name'])[
+            page_entries = sorted(filtered_fusions, key=lambda x: x.name)[
                            (page - 1) * items_per_page: page * items_per_page]
 
             title = f"🔬 {ctx.author.display_name}'s Almanac ({len(discovered_ids)}/{total_almanac_fusions}) " \
@@ -2047,8 +2070,8 @@ class ARG(commands.Cog):
 
             display_lines = []
             for i, f in enumerate(page_entries, start=(page - 1) * items_per_page + 1):
-                recipe_str = self.fusion_helper.format_recipe_string(f.get('recipe', []))
-                display_lines.append(f"**{i}.** **{f['name']}**\nRecipe: {recipe_str}")
+                recipe_str = self.fusion_helper.format_recipe_string(f.recipe)
+                display_lines.append(f"**{i}.** **{f.name}**\nRecipe: {recipe_str}")
 
             embed.description = "\n\n".join(display_lines)
             embed.set_footer(
@@ -2067,34 +2090,34 @@ class ARG(commands.Cog):
 
         fusion_def = self.fusion_helper.find_defined_fusion(fusion_query)
 
-        if not fusion_def or fusion_def.get("visibility") == "invisible":
+        if not fusion_def or fusion_def.visibility == "invisible":
             embed = discord.Embed(title="ℹ️ Recipe Unknown",
                                   description=f"The fusion recipe for **'{fusion_query}'** could not be found.",
                                   color=discord.Color.purple())
             await ctx.send(embed=embed)
             return
 
-        if fusion_def.get("visibility") == "hidden" and fusion_def['id'] not in discovered_ids:
+        if fusion_def.visibility == "hidden" and fusion_def.id not in discovered_ids:
             embed = discord.Embed(title="ℹ️ Recipe Unknown",
                                   description=f"The fusion recipe for **'{fusion_query}'** could not be found.",
                                   color=discord.Color.purple())
             await ctx.send(embed=embed)
             return
 
-        if fusion_def['id'] not in discovered_ids:
+        if fusion_def.id not in discovered_ids:
             embed = discord.Embed(title="ℹ️ Fusion Not Discovered",
-                                  description=f"You have not discovered **{fusion_def['name']}** yet. ",
+                                  description=f"You have not discovered **{fusion_def.name}** yet. ",
                                   color=discord.Color.purple())
             await ctx.send(embed=embed)
             return
 
-        embed = discord.Embed(title=f"🌿 Almanac Entry: {fusion_def['name']}",
-                              description=f"Detailed schematics for **{fusion_def['name']}** from your almanac.",
+        embed = discord.Embed(title=f"🌿 Almanac Entry: {fusion_def.name}",
+                              description=f"Detailed schematics for **{fusion_def.name}** from your almanac.",
                               color=discord.Color.purple())
-        embed.add_field(name="Asset ID", value=f"`{fusion_def['id']}`", inline=True)
+        embed.add_field(name="Asset ID", value=f"`{fusion_def.id}`", inline=True)
         embed.add_field(name="Classification Tier", value=f"`{fusion_def.type}`", inline=True)
         embed.add_field(name="Fusion Recipe",
-                        value=self.fusion_helper.format_recipe_string(fusion_def.get('recipe', [])), inline=False)
+                        value=self.fusion_helper.format_recipe_string(fusion_def.recipe), inline=False)
 
         image_file_to_send = self.image_helper.get_image_file_for_plant(fusion_def.id)
 
@@ -2115,12 +2138,6 @@ class ARG(commands.Cog):
 
         user_assets = self.fusion_helper.get_user_whole_assets_with_source(profile)
 
-        sorted_user_assets = sorted(
-            user_assets,
-            key=lambda x: len(self.fusion_helper.deconstruct_plant(x)[0]),
-            reverse=True
-        )
-
         all_craftable_fusions = []
         for fusion_def in self.fusion_helper.visible_fusions:
             plan, _ = self.fusion_helper.find_crafting_plan(
@@ -2130,37 +2147,32 @@ class ARG(commands.Cog):
             )
 
             if plan is not None:
-                recipe_counter = Counter(fusion_def.recipe)
-                temp_needed = recipe_counter.copy()
-                have_assets_list = []
+                have_assets_list = [asset['name'] for asset in plan]
 
-                for asset in sorted_user_assets:
-                    if any(asset['source'] == p['source'] and asset['index'] == p['index'] and asset['id'] == p['id']
-                           for p in plan):
-                        asset_components, _ = self.fusion_helper.deconstruct_plant(asset)
-                        asset_counter = Counter(asset_components)
-                        if all(temp_needed.get(item, 0) >= count for item, count in asset_counter.items()):
-                            temp_needed -= asset_counter
-                            have_assets_list.append(asset['name'])
-
-                fusion_def['have_list'] = have_assets_list
-                fusion_def['plan'] = plan
-                fusion_def['is_new'] = fusion_def['id'] not in discovered_ids
-                all_craftable_fusions.append(fusion_def)
-
-        plans_by_fusion_id = {f['id']: f['plan'] for f in all_craftable_fusions}
-        filtered_results = self.fusion_helper.apply_almanac_filters(all_craftable_fusions, filters, discovered_ids,
+                info = {
+                    "fusion_def": fusion_def,
+                    "plan": plan,
+                    "is_new": fusion_def.id not in discovered_ids,
+                    "have_list": have_assets_list
+                }
+                all_craftable_fusions.append(info)
+        
+        craftable_fusion_def = [info['fusion_def'] for info in all_craftable_fusions]
+        plans_by_fusion_id = {info['fusion_def'].id: info['plan'] for info in all_craftable_fusions}
+        filtered_fusions = self.fusion_helper.apply_almanac_filters(craftable_fusion_def, filters, discovered_ids, 
                                                                     plans_by_fusion_id=plans_by_fusion_id)
+        
+        filtered_results_info = [info for info in all_craftable_fusions if info['fusion_def'] in filtered_fusions]
 
-        if not filtered_results:
+        if not filtered_results_info:
             desc = "You cannot make any fusions that match your filters with your current assets."
             await ctx.send(
                 embed=discord.Embed(title="✅ Available Fusions", description=desc, color=discord.Color.purple()))
             return
 
         items_per_page = 5
-        sorted_entries = sorted(filtered_results,
-                                key=lambda f: (not f.get('is_new', False), len(f.get('recipe', [])), f['name']))
+        sorted_entries = sorted(filtered_results_info,
+                                key=lambda f: (not f['is_new'], len(f['fusion_def'].recipe), f['fusion_def'].name))
 
         total_pages = max(1, (len(sorted_entries) + items_per_page - 1) // items_per_page)
         page = max(1, min(page, total_pages))
@@ -2168,25 +2180,26 @@ class ARG(commands.Cog):
 
         embed = discord.Embed(title=f"✅ Available Fusions (Page {page}/{total_pages})", color=discord.Color.purple())
 
-        for f in page_entries:
-            new_tag = " **[NEW]**" if f['is_new'] else ""
-            storage_items_in_plan = [asset for asset in f.get("plan", []) if asset.get("source") == "storage"]
+        for info in page_entries:
+            f = info['fusion_def']
+            new_tag = " **[NEW]**" if info['is_new'] else ""
+            storage_items_in_plan = [asset for asset in info.get("plan", []) if asset.get("source") == "storage"]
             storage_tag = " 📦" if storage_items_in_plan else ""
-            recipe_str = self.fusion_helper.format_recipe_string(f.get('recipe', []))
+            recipe_str = self.fusion_helper.format_recipe_string(f.recipe)
 
-            have_list = f.get('have_list', [])
+            have_list = info.get('have_list', [])
             have_str = ", ".join(
                 [f"**{name}** x{count}" for name, count in Counter(have_list).items()]) if have_list else "None"
 
             if not storage_tag:
-                fuse_args = [str(a['index'] + 1) if a['source'] == 'garden' else a['id'] for a in f.get('plan', [])]
+                fuse_args = [str(a['index'] + 1) if a['source'] == 'garden' else a['id'] for a in info.get('plan', [])]
                 command_str = f"`{ctx.prefix}fuse {' '.join(fuse_args)}`"
             else:
                 unstore_indices = sorted([str(asset['index'] + 1) for asset in storage_items_in_plan])
                 command_str = f"`{ctx.prefix}unstore {' '.join(unstore_indices)}`"
 
             value_str = f"Recipe: {recipe_str}\nHave: {have_str}\n{command_str}"
-            embed.add_field(name=f"▫️ {f['name']}{new_tag}{storage_tag}", value=value_str, inline=False)
+            embed.add_field(name=f"▫️ {f.name}{new_tag}{storage_tag}", value=value_str, inline=False)
 
         embed.set_footer(
             text=f"Use {ctx.prefix}almanac available [filters] [page]. Filters: name:<str> contains:<str> tier:<#> "
@@ -2210,7 +2223,6 @@ class ARG(commands.Cog):
         material_names = self.fusion_helper.all_materials_by_name
 
         valid_user_assets = self.fusion_helper.get_valid_crafting_components(user_assets)
-
         sorted_user_assets = sorted(
             valid_user_assets,
             key=lambda x: len(self.fusion_helper.deconstruct_plant(x)[0]),
@@ -2218,19 +2230,15 @@ class ARG(commands.Cog):
         )
 
         for fusion_def in self.fusion_helper.visible_fusions:
-            if fusion_def['id'] in discovered_ids:
+            if fusion_def.id in discovered_ids:
                 continue
 
             recipe_counter = Counter(fusion_def.recipe)
-
             plan, needed = self.fusion_helper.find_crafting_plan(
                 recipe_counter=recipe_counter,
                 user_assets=user_assets,
                 fusion_id_to_check=fusion_def.id
             )
-
-            fusion_def['plan'] = plan
-            fusion_def['need_counter'] = needed
 
             have_assets_list = []
             if plan is not None:
@@ -2253,11 +2261,16 @@ class ARG(commands.Cog):
                         sort_group = 1
                     else:
                         sort_group = 2
+            
+            info = {
+                "fusion_def": fusion_def,
+                "plan" : plan,
+                "need_counter": needed,
+                "have_list": have_assets_list,
+                "sort_group": sort_group
+            }
 
-            fusion_def['have_list'] = have_assets_list
-            fusion_def['sort_group'] = sort_group
-
-            potential_fusions.append(fusion_def)
+            potential_fusions.append(info)
 
         missing_filter_value = None
         temp_filters = list(filters)
@@ -2268,8 +2281,12 @@ class ARG(commands.Cog):
                 except ValueError:
                     pass
                 filters.remove(f)
+        
+        potential_fusions_def = [info['fusion_def'] for info in potential_fusions]
+        filtered_fusions = self.fusion_helper.apply_almanac_filters(potential_fusions_def, filters, discovered_ids)
+        filtered_ids = {f.id for f in filtered_fusions}
 
-        filtered_results = self.fusion_helper.apply_almanac_filters(potential_fusions, filters, discovered_ids)
+        filtered_results = [info for info in potential_fusions if info['fusion_def'].id in filtered_ids]
 
         if missing_filter_value is not None:
             filtered_results = [f for f in filtered_results if
@@ -2281,21 +2298,22 @@ class ARG(commands.Cog):
                                                color=discord.Color.purple()))
             return
 
-        def sort_key(f):
-            group = f.get('sort_group', 3)
+        def sort_key(info):
+            group = info.get('sort_group', 3)
+            f_def = info['fusion_def']
             if group < 2:
-                key1 = sum(f.get('need_counter', Counter()).values())
-                key2 = len(f.get('recipe', []))
-                key3 = f['name']
+                key1 = sum(info.get('need_counter', Counter()).values())
+                key2 = len(f_def.recipe)
+                key3 = f_def.name
                 return group, key1, key2, key3
             elif group == 2:
-                key1 = -len(f.get('have_list', []))
-                key2 = len(f.get('recipe', []))
-                key3 = f['name']
+                key1 = -len(info.get('have_list', []))
+                key2 = len(f_def.recipe)
+                key3 = f_def.name
                 return group, key1, key2, key3
-            else:
-                key1 = len(f.get('recipe', []))
-                key2 = f['name']
+            else: 
+                key1 = len(f_def.recipe)
+                key2 = f_def.name
                 key3 = 0
                 return group, key1, key2, key3
 
@@ -2309,18 +2327,19 @@ class ARG(commands.Cog):
         embed = discord.Embed(title=f"🌱 Potential Discoveries (Page {page}/{total_pages})",
                               color=discord.Color.purple())
 
-        for f in page_entries:
+        for info in page_entries:
+            f = info['fusion_def']
             value_lines = []
-            if f['plan'] is not None:
-                recipe_str = self.fusion_helper.format_recipe_string(f.get('recipe', []))
+            if info['plan'] is not None:
+                recipe_str = self.fusion_helper.format_recipe_string(f.recipe)
                 have_str = ", ".join(
-                    [f"**{name}** x{count}" for name, count in Counter(f.get('have_list', [])).items()])
-                storage_items_in_plan = [asset for asset in f.get("plan", []) if asset.get("source") == "storage"]
+                    [f"**{name}** x{count}" for name, count in Counter(info.get('have_list', [])).items()])
+                storage_items_in_plan = [asset for asset in info.get("plan", []) if asset.get("source") == "storage"]
                 storage_tag = " 📦" if storage_items_in_plan else ""
                 header = f"✅ **Ready to Fuse!**{storage_tag}\nRecipe: {recipe_str}\nHave: {have_str}"
 
                 if not storage_tag:
-                    fuse_args = [str(a['index'] + 1) if a['source'] == 'garden' else a['id'] for a in f['plan']]
+                    fuse_args = [str(a['index'] + 1) if a['source'] == 'garden' else a['id'] for a in info['plan']]
                     command_str = f"`{ctx.prefix}fuse {' '.join(fuse_args)}`"
                     value_lines.append(f"{header}\n{command_str}")
                 else:
@@ -2328,20 +2347,20 @@ class ARG(commands.Cog):
                     command_str = f"`{ctx.prefix}unstore {' '.join(unstore_indices)}`"
                     value_lines.append(f"{header}\n{command_str}")
             else:
-                recipe_str = self.fusion_helper.format_recipe_string(f.get('recipe', []))
+                recipe_str = self.fusion_helper.format_recipe_string(f.recipe)
                 value_lines.append(f"Recipe: {recipe_str}")
 
-                have_list = f.get('have_list', [])
+                have_list = info.get('have_list', [])
                 if have_list:
                     have_str = ", ".join([f"**{name}** x{count}" for name, count in Counter(have_list).items()])
                     value_lines.append(f"Have: {have_str}")
 
-                need_counter = f.get('need_counter', Counter())
+                need_counter = info.get('need_counter', Counter())
                 if any(count > 0 for count in need_counter.values()):
                     need_str = ", ".join([f"**{name}** x{count}" for name, count in need_counter.items() if count > 0])
                     value_lines.append(f"Need: {need_str}")
 
-            embed.add_field(name=f"▫️ {f['name']}", value="\n".join(value_lines) or " ", inline=False)
+            embed.add_field(name=f"▫️ {f.name}", value="\n".join(value_lines) or " ", inline=False)
 
         embed.set_footer(
             text=f"Use {ctx.prefix}almanac discover [filters] [page]. Filters: name:<str> contains:<str> tier:<#> "
@@ -2417,7 +2436,7 @@ class ARG(commands.Cog):
             color=discord.Color.green()
         )
         await ctx.send(embed=embed)
-
+    
     @commands.group(name="debug")
     @is_cog_ready()
     @commands.is_owner()
@@ -2529,7 +2548,7 @@ class ARG(commands.Cog):
             return
 
         all_items = self.shop_helper.get_all_item_definitions()
-        actual_item_key = next((k for k in all_items if k.lower() == item_id.lower()), None)
+        actual_item_key = next((k for k, v in all_items.items() if k.lower() == item_id.lower()), None)
         item_details = all_items.get(actual_item_key)
 
         if not actual_item_key or not item_details:
@@ -2539,8 +2558,8 @@ class ARG(commands.Cog):
             return
 
         self.garden_helper.add_item_to_inventory(target_user.id, actual_item_key, quantity)
-
-        item_name = item_details.get("name", actual_item_key)
+        
+        item_name = item_details.name if isinstance(item_details, ShopItemDefinition) else item_details.get("name", actual_item_key)
         embed = discord.Embed(
             title="⚙️ Debug: Item Addition Protocol",
             description=f"Successfully added **{item_name}** (`{actual_item_key}`) x{quantity} to "
@@ -2551,9 +2570,15 @@ class ARG(commands.Cog):
         await ctx.send(embed=embed)
 
     @cmd_debug_group.command(name="removeitem")
-    async def debug_removeitem_command(self, ctx: commands.Context, target_user: discord.Member, item_id: str):
-        """Removes one instance of an item from a user's inventory."""
+    async def debug_removeitem_command(self, ctx: commands.Context, target_user: discord.Member, item_id: str, quantity: int = 1):
+        """Removes one or more instances of an item from a user's inventory."""
 
+        if quantity <= 0:
+            await ctx.send(
+                embed=discord.Embed(title="❌ Invalid Input", description="Quantity must be a positive number.",
+                                    color=discord.Color.red()))
+            return
+            
         profile = self.garden_helper.get_user_profile_view(target_user.id)
         inventory = profile.inventory
 
@@ -2561,14 +2586,23 @@ class ARG(commands.Cog):
         actual_item_key = next((k for k in inventory if k.lower() == item_id_lower), None)
 
         if actual_item_key:
-            self.garden_helper.remove_item_from_inventory(target_user.id, actual_item_key)
+            if Counter(inventory).get(actual_item_key, 0) < quantity:
+                await ctx.send(embed=discord.Embed(
+                    title="⚙️ Debug: Insufficient Quantity",
+                    description=f"User only has {Counter(inventory).get(actual_item_key, 0)} of this item. Cannot remove {quantity}.",
+                    color=discord.Color.yellow()
+                ))
+                return
+
+            self.garden_helper.remove_item_from_inventory(target_user.id, actual_item_key, quantity)
 
             all_items = self.shop_helper.get_all_item_definitions()
-            item_name = all_items.get(actual_item_key, {}).get("name", actual_item_key)
+            item_details = all_items.get(actual_item_key)
+            item_name = item_details.name if isinstance(item_details, ShopItemDefinition) else item_details.get("name", actual_item_key)
 
             embed = discord.Embed(
                 title="⚙️ Debug: Item Removal Protocol",
-                description=f"Successfully removed one **{item_name}** (`{actual_item_key}`) from "
+                description=f"Successfully removed **{item_name}** (`{actual_item_key}`) x{quantity} from "
                             f"{target_user.mention}'s inventory.",
                 color=discord.Color.orange()
             )
@@ -2586,7 +2620,6 @@ class ARG(commands.Cog):
     @cmd_debug_group.group(name="addplant")
     async def debug_addplant_group(self, ctx: commands.Context):
         """Base command for adding plants to a user's garden."""
-
         pass
 
     @debug_addplant_group.command(name="baseplant")
@@ -2785,8 +2818,7 @@ class ARG(commands.Cog):
                                     color=discord.Color.red()))
             return
 
-        self.data["flags"]["plant_growth_duration_minutes"] = minutes
-        await self.config.flags.set(self.data["flags"])
+        self.game_state_helper.set_global_state("plant_growth_duration_minutes", minutes)
 
         embed = discord.Embed(
             title="✅ Debug: Plant Growth Speed Updated",
@@ -2815,11 +2847,9 @@ class ARG(commands.Cog):
                                     color=discord.Color.red()))
             return
 
-        stock_key = f"{item_id}_stock"
-        current_stock = self.data["flags"].get(stock_key, 0)
+        current_stock = self.game_state_helper.get_rux_stock(item_id)
         new_stock = current_stock + amount
-        self.data["flags"][stock_key] = new_stock
-        await self.config.flags.set(self.data["flags"])
+        self.game_state_helper.set_rux_stock(item_id, new_stock)
 
         embed = discord.Embed(
             title="⚙️ Debug: Stock Replenishment Protocol",
@@ -2841,7 +2871,6 @@ class ARG(commands.Cog):
                                            color=discord.Color.orange()))
 
         await self.shop_helper.refresh_penny_shop_if_needed(self.logger, force=True)
-        await self.config.flags.set(self.data["flags"])
 
         await self.logger.log_to_discord(f"Debug: Penny's Shop manually refreshed by {ctx.author.name}.", "INFO")
         await ctx.send(embed=discord.Embed(title="✅ Debug: Penny's Shop Refreshed",
@@ -2853,7 +2882,7 @@ class ARG(commands.Cog):
     async def debug_pennyshoprefresh_command(self, ctx: commands.Context, interval_hours: Optional[int] = None):
         """Sets or displays the Penny's Shop refresh interval in hours."""
 
-        current_interval = self.data["flags"].get("treasure_shop_refresh_interval_hours", 1)
+        current_interval = self.game_state_helper.get_global_state("treasure_shop_refresh_interval_hours", 1)
 
         if interval_hours is None:
             embed = discord.Embed(
@@ -2876,8 +2905,7 @@ class ARG(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        self.data["flags"]["treasure_shop_refresh_interval_hours"] = interval_hours
-        await self.config.flags.set(self.data["flags"])
+        self.game_state_helper.set_global_state("treasure_shop_refresh_interval_hours", interval_hours)
 
         embed = discord.Embed(
             title="✅ Debug: Penny's Shop Interval Updated",
@@ -2897,7 +2925,6 @@ class ARG(commands.Cog):
                                            color=discord.Color.orange()))
 
         await self.shop_helper.refresh_dave_shop_if_needed(self.logger, force=True)
-        await self.config.flags.set(self.data["flags"])
 
         await self.logger.log_to_discord(f"Debug: Dave's Shop manually refreshed by {ctx.author.name}.", "INFO")
         await ctx.send(embed=discord.Embed(title="✅ Debug: Dave's Shop Refreshed",

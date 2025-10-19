@@ -2559,7 +2559,7 @@ class ARG(commands.Cog):
 
         self.garden_helper.add_item_to_inventory(target_user.id, actual_item_key, quantity)
         
-        item_name = item_details.name if isinstance(item_details, ShopItemDefinition) else item_details.get("name", actual_item_key)
+        item_name = item_details.name
         embed = discord.Embed(
             title="⚙️ Debug: Item Addition Protocol",
             description=f"Successfully added **{item_name}** (`{actual_item_key}`) x{quantity} to "
@@ -2598,7 +2598,7 @@ class ARG(commands.Cog):
 
             all_items = self.shop_helper.get_all_item_definitions()
             item_details = all_items.get(actual_item_key)
-            item_name = item_details.name if isinstance(item_details, ShopItemDefinition) else item_details.get("name", actual_item_key)
+            item_name = item_details.name
 
             embed = discord.Embed(
                 title="⚙️ Debug: Item Removal Protocol",

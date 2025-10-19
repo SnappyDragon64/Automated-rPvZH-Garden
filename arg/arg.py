@@ -1,5 +1,6 @@
 import asyncio
 import dataclasses
+import io
 import json
 import time
 import traceback
@@ -2970,3 +2971,101 @@ class ARG(commands.Cog):
         )
         embed.set_footer(text="Penny - Administrative Override Systems")
         await ctx.send(embed=embed)
+
+    @cmd_debug_group.command(name="dumpdata")
+    async def debug_dumpdata_command(self, ctx: commands.Context):
+        """Dumps the entire current game state into a JSON file."""
+        try:
+            game_state_dict = self.game_state_helper.game_state
+            json_bytes = json.dumps(game_state_dict, indent=4).encode('utf-8')
+            buffer = io.BytesIO(json_bytes)
+            file = discord.File(buffer, filename=f"zen_garden_data_{int(time.time())}.json")
+
+            embed = discord.Embed(
+                title="⚙️ Debug: Game State Dump",
+                description="The current in-memory game state has been successfully serialized.",
+                color=discord.Color.green()
+            )
+            embed.set_footer(text="Penny - Administrative Data Systems")
+            await ctx.send(embed=embed, file=file)
+
+        except Exception as e:
+            embed = discord.Embed(
+                title="❌ Error During Data Dump",
+                description=f"An unexpected error occurred during data serialization:\n`{e}`",
+                color=discord.Color.red()
+            )
+            embed.set_footer(text="Penny - Administrative Data Systems")
+            await ctx.send(embed=embed)
+
+    @cmd_debug_group.command(name="loaddata")
+    async def debug_loaddata_command(self, ctx: commands.Context):
+        """Loads and completely overwrites the game state from an attached JSON file, then auto-reloads the cog."""
+        if not ctx.message.attachments:
+            embed = discord.Embed(
+                title="❌ Missing Attachment",
+                description="Please attach the `data.json` file when running this command.",
+                color=discord.Color.red()
+            )
+            embed.set_footer(text="Penny - Administrative Input Error")
+            await ctx.send(embed=embed)
+            return
+
+        attachment = ctx.message.attachments[0]
+        if not attachment.filename.endswith('.json'):
+            embed = discord.Embed(
+                title="❌ Invalid File Type",
+                description="The attached file must be a `.json` file.",
+                color=discord.Color.red()
+            )
+            embed.set_footer(text="Penny - Administrative Input Error")
+            await ctx.send(embed=embed)
+            return
+
+        try:
+            json_bytes = await attachment.read()
+            loaded_data = json.loads(json_bytes)
+
+            if not isinstance(loaded_data, dict) or "users" not in loaded_data or "global_state" not in loaded_data:
+                embed = discord.Embed(
+                    title="❌ Invalid JSON Structure",
+                    description="The JSON file is missing the required top-level keys (`users`, `global_state`).",
+                    color=discord.Color.red()
+                )
+                embed.set_footer(text="Penny - Administrative Data Systems")
+                await ctx.send(embed=embed)
+                return
+
+            self.game_state_helper.game_state = loaded_data
+            await self.game_state_helper.commit_to_disk()
+
+            embed = discord.Embed(
+                title="✅ Game State Overwritten Successfully",
+                description="The new data has been saved. **Reloading the cog now to apply changes...**",
+                color=discord.Color.green()
+            )
+            embed.set_footer(text="Penny - Administrative Data Systems")
+            await ctx.send(embed=embed)
+
+            core_cog = self.bot.get_cog("Core")
+            if core_cog:
+                core_cog.reload(ctx, "arg")
+            else:
+                await ctx.send("⚠️ Could not find the Core cog to trigger a reload. Please reload manually.")
+
+        except json.JSONDecodeError:
+            embed = discord.Embed(
+                title="❌ JSON Parsing Error",
+                description="The attached file is not a valid JSON. The operation has been cancelled.",
+                color=discord.Color.red()
+            )
+            embed.set_footer(text="Penny - Administrative Data Systems")
+            await ctx.send(embed=embed)
+        except Exception as e:
+            embed = discord.Embed(
+                title="❌ Critical Error During Load",
+                description=f"An unexpected error occurred while processing the file or saving the state:\n`{e}`",
+                color=discord.Color.red()
+            )
+            embed.set_footer(text="Penny - Administrative Data Systems")
+            await ctx.send(embed=embed)

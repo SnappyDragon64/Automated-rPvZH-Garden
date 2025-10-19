@@ -299,21 +299,20 @@ class ARG(commands.Cog):
 
         if inventory_items:
             all_item_defs = self.shop_helper.get_all_item_definitions()
-            inventory_counts = Counter(inventory_items)
             inventory_display = []
 
-            for item_id, count in sorted(inventory_counts.items()):
+            for item_id, count in sorted(inventory_items.items()):
                 item_info = all_item_defs.get(item_id)
-                
+
                 if isinstance(item_info, ShopItemDefinition) and item_info.category == "upgrade":
                     continue
-                
+
                 item_name = ""
                 if isinstance(item_info, ShopItemDefinition):
                     item_name = item_info.name
                 elif isinstance(item_info, dict):
                     item_name = item_info.get("name", item_id)
-                
+
                 item_name = item_name or item_id
                 inventory_display.append(f"**{item_name}** (`{item_id}`)" + (f" x{count}" if count > 1 else ""))
 
@@ -1588,7 +1587,7 @@ class ARG(commands.Cog):
             return
 
         recipient_profile = self.garden_helper.get_user_profile_view(recipient.id)
-        recipient_inv_counter = Counter(recipient_profile.inventory)
+        recipient_inv_counter = recipient_profile.inventory
 
         requested_items_counter = Counter()
         errors = []
@@ -1887,11 +1886,11 @@ class ARG(commands.Cog):
                     errors.append(f"'{cmd_arg}' is not a valid plot number or fusable material.")
 
         for item_id, count in requested_items_counter.items():
-            if Counter(profile.inventory).get(item_id, 0) < count:
+            if profile.inventory.get(item_id, 0) < count:
                 item_name = self.data_loader.materials_data.get(item_id, item_id)
                 errors.append(
                     f"You need {count}x **{item_name}** but only have "
-                    f"{Counter(profile.inventory).get(item_id, 0)}.")
+                    f"{profile.inventory.get(item_id, 0)}.")
 
         if first_plot_mentioned is None:
             errors.append("Fusion requires at least one plant from a plot to determine the result's location.")
@@ -2586,10 +2585,10 @@ class ARG(commands.Cog):
         actual_item_key = next((k for k in inventory if k.lower() == item_id_lower), None)
 
         if actual_item_key:
-            if Counter(inventory).get(actual_item_key, 0) < quantity:
+            if inventory.get(actual_item_key, 0) < quantity:
                 await ctx.send(embed=discord.Embed(
                     title="⚙️ Debug: Insufficient Quantity",
-                    description=f"User only has {Counter(inventory).get(actual_item_key, 0)} of this item. Cannot remove {quantity}.",
+                    description=f"User only has {inventory.get(actual_item_key, 0)} of this item. Cannot remove {quantity}.",
                     color=discord.Color.yellow()
                 ))
                 return

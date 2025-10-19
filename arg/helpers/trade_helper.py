@@ -113,7 +113,7 @@ class TradeHelper:
         if sender_profile.balance < sun_to_give:
             return False, "Trade failed: Sender no longer has enough sun.", None
 
-        recipient_inv_counter = Counter(recipient_profile.inventory)
+        recipient_inv_counter = recipient_profile.inventory
         for item in items_info:
             if recipient_inv_counter.get(item.get("id"), 0) < item.get("count", 0):
                 return False, f"Trade failed: Recipient no longer has enough **{item.get('name')}**.", None

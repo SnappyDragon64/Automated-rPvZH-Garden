@@ -1,8 +1,7 @@
 import dataclasses
 from collections import Counter
 from typing import Any, Dict, List, Optional, Tuple
-
-from redbot.core import Config
+from types import MappingProxyType
 
 from .game_state_helper import GameStateHelper
 
@@ -41,7 +40,7 @@ class GardenHelper:
 
     def _deserialize_user(self, user_id: int, user_dict: Dict[str, Any]) -> UserProfile:
         defaults = {
-            "balance": 0, "garden": [None] * 12, "inventory": [], "last_daily": None,
+            "balance": 0, "garden": [None] * 12, "inventory": {}, "last_daily": None,
             "discovered_fusions": [], "storage_shed_slots": [None] * 8, "mastery": 0,
             "time_mastery": 0, "unlocked_backgrounds": ["default"], "active_background": "default"
         }
@@ -67,9 +66,8 @@ class GardenHelper:
         """Converts a UserProfile object back to a dict and saves it to the IN-MEMORY state."""
         serializable_data = dataclasses.asdict(user_profile)
 
-        # Handle renaming for legacy data structure if needed
         serializable_data['mastery'] = serializable_data.pop('sun_mastery')
-        serializable_data.pop('user_id')  # Do not save the user_id inside its own dict
+        serializable_data.pop('user_id')
 
         self.game_state_helper.set_user_data(user_profile.user_id, serializable_data)
 
@@ -95,7 +93,7 @@ class GardenHelper:
             active_background=user_profile.active_background,
             garden=tuple(user_profile.garden),
             storage_shed=tuple(user_profile.storage_shed),
-            inventory=tuple(user_profile.inventory),
+            inventory=MappingProxyType(user_profile.inventory),
             discovered_fusions=tuple(user_profile.discovered_fusions),
             unlocked_backgrounds=tuple(user_profile.unlocked_backgrounds),
         )
@@ -255,23 +253,21 @@ class GardenHelper:
 
     def add_item_to_inventory(self, user_id: int, item_id: str, quantity: int = 1):
         profile = self._get_or_create_user_profile(user_id)
-
-        for _ in range(quantity):
-            profile.inventory.append(item_id)
-
+        profile.inventory[item_id] = profile.inventory.get(item_id, 0) + quantity
         self._save_user_profile(profile)
 
     def remove_item_from_inventory(self, user_id: int, item_id: str, quantity: int = 1) -> bool:
         profile = self._get_or_create_user_profile(user_id)
+        current_amount = profile.inventory.get(item_id, 0)
 
-        if Counter(profile.inventory).get(item_id, 0) < quantity:
+        if current_amount < quantity:
             return False
 
-        for _ in range(quantity):
-            try:
-                profile.inventory.remove(item_id)
-            except ValueError:
-                return False
+        new_amount = current_amount - quantity
+        if new_amount <= 0:
+            del profile.inventory[item_id]
+        else:
+            profile.inventory[item_id] = new_amount
 
         self._save_user_profile(profile)
         return True

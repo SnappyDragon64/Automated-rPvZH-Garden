@@ -217,6 +217,7 @@ class FusionHelper:
         and tags them with their source (garden, storage, inventory) and index.
         This creates the intermediate format needed for fusion calculations.
         """
+
         assets = []
 
         for i, plant in enumerate(profile.garden):
@@ -227,10 +228,12 @@ class FusionHelper:
             if plant:
                 assets.append({**dataclasses.asdict(plant), "source": "storage", "index": i})
 
-        for item_id in profile.inventory:
+        for item_id, count in profile.inventory.items():
             if item_name := self.all_materials.get(item_id):
-                assets.append(
-                    {"name": item_name, "id": item_id, "type": "material", "source": "inventory", "index": -1})
+                for _ in range(count):
+                    assets.append(
+                        {"name": item_name, "id": item_id, "type": "material", "source": "inventory", "index": -1}
+                    )
 
         return assets
 

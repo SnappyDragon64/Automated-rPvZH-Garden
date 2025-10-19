@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
-from typing import Tuple, Optional, List, Union
+from types import MappingProxyType
+from typing import Tuple, Optional, List, Union, Dict
 
 
 @dataclass
@@ -35,7 +36,7 @@ class UserProfile:
     active_background: str = "default"
     garden: List[SlotItem] = field(default_factory=lambda: [None] * 12)
     storage_shed: List[Optional[PlantedPlant]] = field(default_factory=lambda: [None] * 8)
-    inventory: List[str] = field(default_factory=list)
+    inventory: Dict[str, int] = field(default_factory=dict)
     discovered_fusions: List[str] = field(default_factory=list)
     unlocked_backgrounds: List[str] = field(default_factory=lambda: ["default"])
 
@@ -53,6 +54,6 @@ class UserProfileView:
     active_background: str
     garden: Tuple[SlotItem, ...]
     storage_shed: Tuple[Optional[PlantedPlant], ...]
-    inventory: Tuple[str, ...]
+    inventory: MappingProxyType[str, int]
     discovered_fusions: Tuple[str, ...]
     unlocked_backgrounds: Tuple[str, ...]

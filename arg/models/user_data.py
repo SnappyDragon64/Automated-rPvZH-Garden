@@ -1,11 +1,10 @@
 from dataclasses import dataclass, field
 from typing import Tuple, Optional, List, Union
 
-# --- Instance Representations ---
 
 @dataclass
 class PlantedSeedling:
-    """Represents an instance of a seedling growing in a garden. Mutable."""
+    """Represents an instance of a seedling growing in a garden."""
     id: str
     progress: float = 0.0
     notification_channel_id: Optional[int] = None
@@ -13,28 +12,21 @@ class PlantedSeedling:
 
     @property
     def name(self) -> str:
-        # The name of a planted seedling is always its ID.
         return self.id
 
 @dataclass(frozen=True)
 class PlantedPlant:
-    """Represents an instance of a mature plant in a garden or storage. Immutable."""
+    """Represents an instance of a mature plant in a garden or storage."""
     id: str
     name: str
     type: str
 
-# A type hint for clarity, representing anything that can be in a garden/storage slot.
+
 SlotItem = Union[PlantedSeedling, PlantedPlant, None]
-
-
-# --- Internal Mutable Model ---
 
 @dataclass
 class UserProfile:
-    """
-    The internal, MUTABLE representation of a user's data.
-    This is the "working copy" used exclusively by GardenHelper.
-    """
+    """The internal representation of a user's data."""
     user_id: int
     balance: int = 0
     sun_mastery: int = 0
@@ -52,10 +44,7 @@ class UserProfile:
 
 @dataclass(frozen=True)
 class UserProfileView:
-    """
-    The external, IMMUTABLE, read-only view of a user's profile.
-    This is the safe "snapshot" given to the rest of the application.
-    """
+    """The external read-only view of a user's profile."""
     user_id: int
     balance: int
     sun_mastery: int

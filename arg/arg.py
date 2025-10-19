@@ -1520,7 +1520,7 @@ class ARG(commands.Cog):
                                                color=discord.Color.red()))
             return
 
-        await asyncio.sleep(60)
+        await asyncio.sleep(60.0)
 
         if self.trade_helper.resolve_trade(trade_id):
             timeout_embed = discord.Embed(title="⏰ Asset Exchange Proposal Expired",
@@ -1952,7 +1952,7 @@ class ARG(commands.Cog):
         await ctx.send(embed=embed)
 
         try:
-            msg = await self.bot.wait_for("message", timeout=30.0,
+            msg = await self.bot.wait_for("message", timeout=60.0,
                                           check=lambda m: m.author == ctx.author and m.channel == ctx.channel
                                           and m.content.lower() in ["yes", "y", "no", "n"])
 

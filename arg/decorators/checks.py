@@ -1,30 +1,45 @@
+import time
+
 import discord
 from redbot.core import commands
 
 
 def is_not_locked():
     """
-    A commands.check decorator that fails if the command author is locked.
-    Uses the LockHelper to check the user's status.
+    A commands.check decorator that fails if the command author has a valid, non-expired lock.
+    If a lock is found but has existed for more than 60 seconds, it is automatically cleared.
     """
-
     async def predicate(ctx: commands.Context):
-        # The cog instance is accessible via ctx.cog
         if not hasattr(ctx.cog, 'lock_helper'):
-            # Failsafe in case the cog isn't fully loaded or is misconfigured
             return True
 
-        lock = ctx.cog.lock_helper.get_user_lock(ctx.author.id)
+        user_id = ctx.author.id
+        lock = ctx.cog.lock_helper.get_user_lock(user_id)
+
         if lock:
-            embed = discord.Embed(
-                title=f"❌ Action Locked: Pending {lock.get('type', 'Action').capitalize()}",
-                description=f"User {ctx.author.mention}, your actions are locked. Reason:\n\n*_"
-                            f"{lock.get('message', 'You are busy with another task.')}_*",
-                color=discord.Color.orange()
-            )
-            embed.set_footer(text="Penny - Global Lock System")
-            await ctx.send(embed=embed)
-            return False
+            lock_age = time.time() - lock.get("timestamp", 0)
+
+            if lock_age >= 60.0:
+                ctx.cog.lock_helper.remove_lock_for_user(user_id)
+                expired_embed = discord.Embed(
+                    title="⏰ Previous Action Expired",
+                    description=f"Your previous pending action timed out and was automatically cleared. "
+                                f"Please try your command again.",
+                    color=discord.Color.light_grey()
+                )
+                await ctx.send(embed=expired_embed, delete_after=10)
+                return False
+            else:
+                embed = discord.Embed(
+                    title=f"❌ Action Locked: Pending {lock.get('type', 'Action').capitalize()}",
+                    description=f"User {ctx.author.mention}, your actions are locked. Reason:\n\n*_"
+                                f"{lock.get('message', 'You are busy with another task.')}_*",
+                    color=discord.Color.orange()
+                )
+                embed.set_footer(text="Penny - Global Lock System")
+                await ctx.send(embed=embed)
+                return False
+
         return True
 
     return commands.check(predicate)
@@ -35,9 +50,7 @@ def is_cog_ready():
     A commands.check decorator that fails if the cog's main data has not yet been loaded.
     This prevents commands from running during the initial startup sequence.
     """
-
     async def predicate(ctx: commands.Context):
-        # The _initialized flag is on the cog instance
         if not getattr(ctx.cog, '_initialized', False):
             embed = discord.Embed(
                 title="⏳ System Initializing",

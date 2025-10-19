@@ -117,15 +117,15 @@ class DataHelper:
         return backgrounds
 
     def _load_rux_shop_data(self) -> Dict[str, ShopItemDefinition]:
-        data = self._load_json_file("rux_shop.json", {})
+        data = self._load_json_file("shop/rux.json", {})
         return {item_id: ShopItemDefinition(id=item_id, **details) for item_id, details in data.items()}
 
     def _load_penny_shop_data(self) -> Dict[str, ShopItemDefinition]:
-        data = self._load_json_file("penny_shop.json", {})
+        data = self._load_json_file("shop/penny.json", {})
         return {item_id: ShopItemDefinition(id=item_id, **details) for item_id, details in data.items()}
 
     def _load_dave_shop_data(self) -> Dict[str, ShopItemDefinition]:
-        data = self._load_json_file("dave_shop.json", {})
+        data = self._load_json_file("shop/dave.json", {})
         return {item_id: ShopItemDefinition(id=item_id, **details) for item_id, details in data.items()}
 
     def _load_materials_data(self) -> Dict[str, str]:

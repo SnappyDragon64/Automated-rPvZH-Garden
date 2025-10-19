@@ -2437,7 +2437,7 @@ class ARG(commands.Cog):
         )
         await ctx.send(embed=embed)
     
-    @commands.group(name="debug")
+    @commands.group(name="gardenadmin")
     @is_cog_ready()
     @commands.is_owner()
     async def cmd_debug_group(self, ctx: commands.Context):

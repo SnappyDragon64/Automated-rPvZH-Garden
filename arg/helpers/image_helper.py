@@ -45,6 +45,7 @@ class ImageHelper:
         self.locked_slot_image: Optional[Image.Image] = None
         self.empty_slot_image: Optional[Image.Image] = None
         self.seedling_image_template: Optional[Image.Image] = None
+        self.progress_font: Optional[ImageFont.FreeTypeFont] = None
 
     def _sanitize_id_for_filename(self, plant_id: str) -> str:
         return plant_id.replace(" ", "_")
@@ -70,7 +71,7 @@ class ImageHelper:
         return None
 
     def load_assets(self):
-        """Loads all necessary image assets from disk into memory."""
+        """Loads all necessary assets from disk into memory."""
 
         if not PIL_AVAILABLE:
             return
@@ -79,6 +80,13 @@ class ImageHelper:
         self.locked_slot_image = self._load_image_asset("locked_slot.png")
         self.empty_slot_image = self._load_image_asset("empty_slot.png")
         self.seedling_image_template = self._load_image_asset("Seedling.png")
+
+        try:
+            font_path = self.data_path / "font" / "Roboto-Medium.ttf"
+            self.progress_font = ImageFont.truetype(str(font_path), 30)
+        except IOError:
+            self.logger.init_log("Roboto-Medium.ttf not found. Falling back to default font.", "WARNING")
+            self.progress_font = ImageFont.load_default()
 
         if self.base_garden_image:
             self._is_ready = True
@@ -109,11 +117,7 @@ class ImageHelper:
         img_copy = seedling_image.copy()
         draw = ImageDraw.Draw(img_copy)
         progress_text = f"{progress:.1f}%"
-
-        try:
-            font = ImageFont.truetype("arial.ttf", 30)
-        except IOError:
-            font = ImageFont.load_default()
+        font = self.progress_font
 
         bbox = draw.textbbox((0, 0), progress_text, font=font)
         text_width = bbox[2] - bbox[0]

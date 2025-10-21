@@ -67,6 +67,7 @@ class GardenHelper:
         serializable_data = dataclasses.asdict(user_profile)
 
         serializable_data['mastery'] = serializable_data.pop('sun_mastery')
+        serializable_data['storage_shed_slots'] = serializable_data.pop('storage_shed')
         serializable_data.pop('user_id')
 
         self.game_state_helper.set_user_data(user_profile.user_id, serializable_data)

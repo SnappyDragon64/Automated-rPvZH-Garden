@@ -1,0 +1,269 @@
+[
+  {
+    "id": "Howietail",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Lily Pad",
+      "Fertilizer",
+      "Squash",
+      "**PIPI5**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Chimptron",
+    "recipe": [
+      "Peashooter",
+      "Space Debris",
+      "Pumpkin",
+      "Cherry Bomb",
+      "Pumpkin",
+      "Starfruit",
+      "**PIPI5**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Furyflower",
+    "recipe": [
+      "Marigold",
+      "Sunflower",
+      "Marigold",
+      "Golden Bean",
+      "Spikeweed",
+      "Tangle Kelp",
+      "Jicamagicker",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Tall-cat",
+    "recipe": [
+      "Wall-nut",
+      "Fertilizer",
+      "Lily Pad",
+      "Fertilizer",
+      "Squash",
+      "**PIPI5**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Prathodef",
+    "recipe": [
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "**PIPI5**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Chaos Star",
+    "recipe": [
+      "Starfruit",
+      "Magnet-shroom",
+      "Jack-in-the-box",
+      "Jalapeno",
+      "Ice-shroom",
+      "Jicamagicker",
+      "**PIPI5**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Cherry Jerry",
+    "recipe": [
+      "Cherry Bomb",
+      "Cherry Bomb",
+      "Magnet-shroom",
+      "Bucket",
+      "Football Helmet",
+      "Pickaxe",
+      "Jack-in-the-box",
+      "Space Debris",
+      "**PIPI5**"
+    ],
+    "type": "tier9",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Bleanie",
+    "recipe": [
+      "Blover",
+      "Magnet-shroom",
+      "Golden Bean",
+      "Golden Bean",
+      "Golden Bean",
+      "Golden Bean",
+      "Blover",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Sus-shroom",
+    "recipe": [
+      "Sunflower",
+      "Puff-shroom",
+      "Space Debris",
+      "Tangle Kelp",
+      "Sea-shroom",
+      "Tangle Kelp",
+      "Jicamagicker",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "True-shroom",
+    "recipe": [
+      "Fume-shroom",
+      "Scaredy-shroom",
+      "Hypno-shroom",
+      "Magnet-shroom",
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Jaladevin",
+    "recipe": [
+      "Jalapeno",
+      "Peashooter",
+      "Puff-shroom",
+      "Lily Pad",
+      "Sea-shroom",
+      "Flower Pot",
+      "**PIPI5**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Justin-pult",
+    "recipe": [
+      "Cabbage-pult",
+      "Kernel-pult",
+      "Melon-pult",
+      "Garlic",
+      "Melon-pult",
+      "Potato Mine",
+      "Wall-nut",
+      "**PIPI5**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Tree of Wisdom",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Lily Pad",
+      "Fertilizer",
+      "Squash",
+      "**PIPI5**",
+      "Peashooter",
+      "Space Debris",
+      "Pumpkin",
+      "Cherry Bomb",
+      "Pumpkin",
+      "Starfruit",
+      "**PIPI5**",
+      "Marigold",
+      "Sunflower",
+      "Marigold",
+      "Golden Bean",
+      "Spikeweed",
+      "Tangle Kelp",
+      "Jicamagicker",
+      "**PIPI5**",
+      "Wall-nut",
+      "Fertilizer",
+      "Lily Pad",
+      "Fertilizer",
+      "Squash",
+      "**PIPI5**",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "Peashooter",
+      "**PIPI5**",
+      "Starfruit",
+      "Magnet-shroom",
+      "Jack-in-the-box",
+      "Jalapeno",
+      "Ice-shroom",
+      "Jicamagicker",
+      "**PIPI5**",
+      "Cherry Bomb",
+      "Cherry Bomb",
+      "Magnet-shroom",
+      "Bucket",
+      "Football Helmet",
+      "Pickaxe",
+      "Jack-in-the-box",
+      "Space Debris",
+      "**PIPI5**",
+      "Blover",
+      "Magnet-shroom",
+      "Golden Bean",
+      "Golden Bean",
+      "Golden Bean",
+      "Golden Bean",
+      "Blover",
+      "**PIPI5**",
+      "Sunflower",
+      "Puff-shroom",
+      "Space Debris",
+      "Tangle Kelp",
+      "Sea-shroom",
+      "Tangle Kelp",
+      "Jicamagicker",
+      "**PIPI5**",
+      "Fume-shroom",
+      "Scaredy-shroom",
+      "Hypno-shroom",
+      "Magnet-shroom",
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "**PIPI5**",
+      "Jalapeno",
+      "Peashooter",
+      "Puff-shroom",
+      "Lily Pad",
+      "Sea-shroom",
+      "Flower Pot",
+      "**PIPI5**",
+      "Cabbage-pult",
+      "Kernel-pult",
+      "Melon-pult",
+      "Garlic",
+      "Melon-pult",
+      "Potato Mine",
+      "Wall-nut",
+      "**PIPI5**"
+    ],
+    "type": "tier∞",
+    "visibility": "hidden"
+  }
+]

@@ -1,0 +1,178 @@
+[
+  {
+    "id": "Spruce Firnace",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Firnace"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Saw Firnace",
+    "recipe": [
+      "Saw-me-not",
+      "Firnace"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Lotus Firnace",
+    "recipe": [
+      "Snow Lotus",
+      "Firnace"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Aloe Firnace",
+    "recipe": [
+      "Aqua Aloe",
+      "Firnace"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Spruce Sawshooter",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Saw-me-not"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Snowbloom Spruce",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Snow Lotus"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Spruce Sprayshooter",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Aqua Aloe"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Twin Saw-me-not",
+    "recipe": [
+      "Saw-me-not",
+      "Saw-me-not"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Shield Lotus",
+    "recipe": [
+      "Saw-me-not",
+      "Snow Lotus"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Soak-me-not",
+    "recipe": [
+      "Saw-me-not",
+      "Aqua Aloe"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Aloe Alba",
+    "recipe": [
+      "Snow Lotus",
+      "Aqua Aloe"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bamblotus",
+    "recipe": [
+      "Snow Lotus",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bambloe",
+    "recipe": [
+      "Aqua Aloe",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bamboo Archer",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bamblade",
+    "recipe": [
+      "Saw-me-not",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Bamblock Firnace",
+    "recipe": [
+      "Firnace",
+      "Bamblock"
+    ],
+    "type": "tier2"
+  },
+  {
+    "id": "Firnurse",
+    "recipe": [
+      "Aqua Aloe",
+      "Snow Lotus",
+      "Firnace"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Spruce Ballista",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Spruce Sharpshooter",
+      "Fertilizer"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Spruce Supershooter",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Saw-me-not",
+      "Aqua Aloe"
+    ],
+    "type": "tier3"
+  },
+  {
+    "id": "Atlantis Ballista",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Spruce Sharpshooter",
+      "Aqua Aloe",
+      "Fertilizer"
+    ],
+    "type": "tier4"
+  },
+  {
+    "id": "Boreal Lifereaver",
+    "recipe": [
+      "Spruce Sharpshooter",
+      "Spruce Sharpshooter",
+      "Aqua Aloe",
+      "Saw-me-not",
+      "Snow Lotus"
+    ],
+    "type": "tier5"
+  }
+]

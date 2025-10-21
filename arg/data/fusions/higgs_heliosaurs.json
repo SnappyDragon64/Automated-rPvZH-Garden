@@ -1,0 +1,63 @@
+[
+  {
+    "id": "Potassium Prophet",
+    "recipe": [
+      "Sunflower",
+      "Sunflower",
+      "Umbrella Leaf",
+      "Marigold",
+      "Golden Bean",
+      "Plantern",
+      "Starfruit",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier8",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Heliosaur",
+    "recipe": [
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean",
+      "Sunflower",
+      "Cabbage-pult",
+      "Sunflower",
+      "Chomper",
+      "Sunflower",
+      "Magnet-shroom",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier10",
+    "visibility": "hidden"
+  },
+  {
+    "id": "HIGG SHOT",
+    "recipe": [
+      "Hypno-shroom",
+      "Doom-shroom",
+      "Doom-shroom",
+      "Marigold",
+      "Umbrella Leaf",
+      "Cherry Bomb",
+      "Pumpkin",
+      "Wall-nut",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier9",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Cultivation Pot",
+    "recipe": [
+      "Plantern",
+      "Flower Pot",
+      "Hypno-shroom",
+      "Fume-shroom",
+      "Sunflower",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  }
+]

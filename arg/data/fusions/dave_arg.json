@@ -1,0 +1,48 @@
+[
+  {
+    "id": "Roaring-shroom",
+    "recipe": [
+      "Doom-shroom",
+      "Doom-shroom",
+      "Cactus",
+      "**PIPI5**",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier5",
+    "visibility": "hidden"
+  },
+  {
+    "id": "FRIENDTAIL",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Jalapeno",
+      "Ice-shroom",
+      "**PIPI5**",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "ERAMPENO",
+    "recipe": [
+      "Jalapeno",
+      "Doom-shroom",
+      "**PIPI5**",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier4",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Gastater",
+    "recipe": [
+      "Imitater",
+      "**PIPI5**",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier3",
+    "visibility": "hidden"
+  }
+]

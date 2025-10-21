@@ -76,11 +76,45 @@ class DataHelper:
             self.logger.init_log(f"{log_prefix}Failed to load or parse: {e}. Using default fallback data.", "ERROR")
             return default_data
 
+    def _load_and_compile_json_from_directory(self, dir_name: str) -> List[Dict[str, Any]]:
+        """Loads all JSON files from a subdirectory and compiles them into a single list."""
+
+        compiled_data = []
+        directory_path = self.data_path / dir_name
+        log_prefix = f"Data Load ({dir_name}/): "
+
+        if not directory_path.is_dir():
+            self.logger.init_log(f"{log_prefix}Directory not found. Skipping load for this category.", "WARNING")
+            return []
+
+        json_files = list(directory_path.glob("*.json"))
+        if not json_files:
+            self.logger.init_log(f"{log_prefix}No JSON files found in the directory.", "WARNING")
+            return []
+
+        for file_path in json_files:
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                if isinstance(data, list):
+                    compiled_data.extend(data)
+                else:
+                    self.logger.init_log(f"{log_prefix}File '{file_path.name}' does not contain a JSON list. Skipping.",
+                                         "WARNING")
+            except (json.JSONDecodeError, Exception) as e:
+                self.logger.init_log(f"{log_prefix}Failed to load or parse '{file_path.name}': {e}.", "ERROR")
+
+        self.logger.init_log(
+            f"{log_prefix}Successfully loaded and compiled {len(compiled_data)} entries from {len(json_files)} file(s).",
+            "INFO")
+        return compiled_data
 
     def _load_base_plants_data(self) -> List[BasePlant]:
-        fallback = [
-            {"id": "Peashooter", "type": "base_plant", "name": "Peashooter", "category": "vanilla", "shop": False}]
-        data = self._load_json_file("base_plants.json", fallback)
+        data = self._load_and_compile_json_from_directory("base_plants")
+        if not data:
+            self.logger.init_log("Data Load (base_plants/): Using default fallback data.", "WARNING")
+            data = [
+                {"id": "Peashooter", "type": "base_plant", "name": "Peashooter", "category": "vanilla", "shop": False}]
 
         plants = []
         for plant_dict in data:
@@ -95,8 +129,10 @@ class DataHelper:
         return [SeedlingDefinition(**s_dict) for s_dict in data]
 
     def _load_fusion_data(self) -> List[FusionRecipe]:
-        fallback = []
-        data = self._load_json_file("fusions.json", fallback)
+        data = self._load_and_compile_json_from_directory("fusions")
+        if not data:
+            self.logger.init_log("Data Load (fusions/): No fusion data loaded. Fusion system may not work.", "WARNING")
+            return []
 
         fusions = []
         for f_dict in data:

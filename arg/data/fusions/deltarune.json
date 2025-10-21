@@ -1,0 +1,53 @@
+[
+  {
+    "id": "Crisscross Appletree",
+    "recipe": [
+      "Scaredy-shroom",
+      "Cherry Bomb",
+      "Umbrella Leaf",
+      "Wall-nut",
+      "**PIPI5**"
+    ],
+    "type": "tier5",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Fluff-shroom",
+    "recipe": [
+      "Hypno-shroom",
+      "Hypno-shroom",
+      "Cherry Bomb",
+      "Aqua Aloe",
+      "Snow Lotus",
+      "Firnace",
+      "**PIPI5**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Radishzilla",
+    "recipe": [
+      "Cabbage-pult",
+      "Chomper",
+      "Chomper",
+      "Chomper",
+      "Jicamagicker",
+      "**PIPI5**"
+    ],
+    "type": "tier6",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Holly-nut",
+    "recipe": [
+      "Potato Mine",
+      "Wall-nut",
+      "Saw-me-not",
+      "Aqua Aloe",
+      "**PIPI5**"
+    ],
+    "type": "tier5",
+    "visibility": "hidden"
+  }
+]

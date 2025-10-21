@@ -1,0 +1,174 @@
+[
+  {
+    "id": "Dodo Bush",
+    "recipe": [
+      "Umbrella Leaf",
+      "Cabbage-pult",
+      "Cabbage-pult",
+      "Flower Pot",
+      "Squash",
+      "Tangle Kelp",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Primal Drunkflower",
+    "recipe": [
+      "Sunflower",
+      "Marigold",
+      "Golden Bean",
+      "Pumpkin",
+      "Magnet-shroom",
+      "Pickaxe",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Stray Cat",
+    "recipe": [
+      "Lily Pad",
+      "Fertilizer",
+      "Jalapeno",
+      "Lily Pad",
+      "Fertilizer",
+      "Ice-shroom",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Dark Matter Chomper",
+    "recipe": [
+      "Cherry Bomb",
+      "Chomper",
+      "Starfruit",
+      "Plantern",
+      "Magnet-shroom",
+      "Space Debris",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Hole-shroom Keymaster",
+    "recipe": [
+      "Sea-shroom",
+      "Magnet-shroom",
+      "Sea-shroom",
+      "Cactus",
+      "Space Debris",
+      "Space Debris",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Rotobaga Aria Forme",
+    "recipe": [
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean",
+      "Umbrella Leaf",
+      "Blover",
+      "Jicamagicker",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Ghost Reaper",
+    "recipe": [
+      "Hypno-shroom",
+      "Doom-shroom",
+      "Doom-shroom",
+      "Jalapeno",
+      "Ice-shroom",
+      "Lily Pad",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Omega Penny",
+    "recipe": [
+      "Umbrella Leaf",
+      "Cabbage-pult",
+      "Cabbage-pult",
+      "Flower Pot",
+      "Squash",
+      "Tangle Kelp",
+      "**Suspicious Tree Dew**",
+      "Sunflower",
+      "Marigold",
+      "Golden Bean",
+      "Pumpkin",
+      "Magnet-shroom",
+      "Pickaxe",
+      "**Suspicious Tree Dew**",
+      "Lily Pad",
+      "Fertilizer",
+      "Jalapeno",
+      "Lily Pad",
+      "Fertilizer",
+      "Ice-shroom",
+      "**Suspicious Tree Dew**",
+      "Cherry Bomb",
+      "Chomper",
+      "Starfruit",
+      "Plantern",
+      "Magnet-shroom",
+      "Space Debris",
+      "**Suspicious Tree Dew**",
+      "Sea-shroom",
+      "Magnet-shroom",
+      "Sea-shroom",
+      "Cactus",
+      "Space Debris",
+      "Space Debris",
+      "**Suspicious Tree Dew**",
+      "Cabbage-pult",
+      "Marigold",
+      "Golden Bean",
+      "Umbrella Leaf",
+      "Blover",
+      "Jicamagicker",
+      "**Suspicious Tree Dew**",
+      "Hypno-shroom",
+      "Doom-shroom",
+      "Doom-shroom",
+      "Jalapeno",
+      "Ice-shroom",
+      "Lily Pad",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier-∞",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Frost Atropine",
+    "recipe": [
+      "Fume-shroom",
+      "Ice-shroom",
+      "Doom-shroom",
+      "Fume-shroom",
+      "Fertilizer",
+      "Ice-shroom",
+      "Plantern",
+      "Ice-shroom",
+      "Lily Pad",
+      "Fertilizer",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier11",
+    "visibility": "hidden"
+  }
+]

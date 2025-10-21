@@ -1,0 +1,38 @@
+[
+    {
+        "id": "Firnace",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Spruce Sharpshooter",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Saw-me-not",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Snow Lotus",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Aqua Aloe",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    },
+    {
+        "id": "Bamblock",
+        "type": "base_plant",
+        "shop": false,
+        "category": "snow"
+    }
+]

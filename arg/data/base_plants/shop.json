@@ -1,0 +1,14 @@
+[
+    {
+        "id": "Golden Bean",
+        "type": "base_plant",
+        "shop": true,
+        "category": "shop"
+    },
+    {
+        "id": "Jicamagicker",
+        "type": "base_plant",
+        "shop": true,
+        "category": "shop"
+    }
+]

@@ -196,59 +196,5 @@
         "type": "base_plant",
         "shop": true,
         "category": "vanilla"
-    },
-    {
-        "id": "Golden Bean",
-        "type": "base_plant",
-        "shop": true,
-        "category": "shop"
-    },
-    {
-        "id": "Jicamagicker",
-        "type": "base_plant",
-        "shop": true,
-        "category": "shop"
-    },
-    {
-        "id": "Imitater",
-        "type": "base_plant",
-        "shop": true,
-        "category": "mystery"
-    },
-    {
-        "id": "Firnace",
-        "type": "base_plant",
-        "shop": false,
-        "category": "snow"
-    },
-    {
-        "id": "Spruce Sharpshooter",
-        "type": "base_plant",
-        "shop": false,
-        "category": "snow"
-    },
-    {
-        "id": "Saw-me-not",
-        "type": "base_plant",
-        "shop": false,
-        "category": "snow"
-    },
-    {
-        "id": "Snow Lotus",
-        "type": "base_plant",
-        "shop": false,
-        "category": "snow"
-    },
-    {
-        "id": "Aqua Aloe",
-        "type": "base_plant",
-        "shop": false,
-        "category": "snow"
-    },
-    {
-        "id": "Bamblock",
-        "type": "base_plant",
-        "shop": false,
-        "category": "snow"
     }
 ]

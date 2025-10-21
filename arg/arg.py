@@ -495,11 +495,11 @@ class ARG(commands.Cog):
             desc += "**Liquidated Assets & Yields:**\n" + "\n".join([f"• {detail}" for detail in sold_plants_details])
 
         if mastery_gained > 0:
-            desc += f"\n\n**Your Sun Mastery has increased by {mastery_gained} to a new level of" \
+            desc += f"\n\n**Your Sun Mastery has increased by {mastery_gained} to a new level of " \
                     f"{profile.sun_mastery}!**"
 
         if time_mastery_gained > 0:
-            desc += f"\n\n**Your Time Mastery has increased by {time_mastery_gained} to a new level of" \
+            desc += f"\n\n**Your Time Mastery has increased by {time_mastery_gained} to a new level of " \
                     f"{profile.time_mastery}!**"
 
         if total_earnings > 0:

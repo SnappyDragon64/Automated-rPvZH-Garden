@@ -1,0 +1,52 @@
+[
+  {
+    "id": "Tennut",
+    "recipe": [
+      "Peashooter",
+      "Cherry Bomb",
+      "Cherry Bomb",
+      "Cactus",
+      "Magnet-shroom",
+      "Wall-nut",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier7",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Starfruit Walker",
+    "recipe": [
+      "Starfruit",
+      "Plantern",
+      "Magnet-shroom",
+      "Space Debris",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier5",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Miniature Guy Funlin",
+    "recipe": [
+      "Squash",
+      "Hypno-shroom",
+      "Scaredy-shroom",
+      "Starfruit",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier5",
+    "visibility": "hidden"
+  },
+  {
+    "id": "Vanissus",
+    "recipe": [
+      "Saw-me-not",
+      "Sunflower",
+      "Marigold",
+      "Golden Bean",
+      "**Suspicious Tree Dew**"
+    ],
+    "type": "tier5",
+    "visibility": "hidden"
+  }
+]
